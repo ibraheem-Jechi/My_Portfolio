@@ -83,13 +83,13 @@ export default function About() {
         {/* Stats */}
         <div className="stats-row">
           {[
-            { target: 3,  plus: '+', label: 'Years Experience' },
+            { target: 2,  plus: '+', label: 'Years Experience' },
             { target: 10, plus: '+', label: 'Projects Shipped' },
             { target: 8,  plus: '+', label: 'Tech Stacks' },
             { target: 3,  plus: '',  label: 'Languages Spoken' },
           ].map(({ target, plus, label }) => (
             <div className="stat-card reveal" key={label}>
-              <span className="stat-num" data-target={target}>0</span>
+              <span className="stat-num" data-target={target}>{target}</span>
               <span className="stat-plus">{plus}</span>
               <span className="stat-lbl">{label}</span>
             </div>

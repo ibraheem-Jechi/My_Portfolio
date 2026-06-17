@@ -19,26 +19,38 @@ export default function ScrollObserver() {
 
     document.querySelectorAll('.reveal').forEach((el) => revealObs.observe(el))
 
+    const animateCounters = (row: Element) => {
+      row.querySelectorAll<HTMLElement>('[data-target]').forEach((num) => {
+        const target = parseInt(num.dataset.target ?? '0', 10)
+        let current = 0
+        num.textContent = '0'
+        const step = Math.max(1, Math.ceil(target / 40))
+        const timer = setInterval(() => {
+          current = Math.min(current + step, target)
+          num.textContent = String(current)
+          if (current >= target) clearInterval(timer)
+        }, 30)
+      })
+    }
+
     const counterObs = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) return
-        entry.target.querySelectorAll<HTMLElement>('[data-target]').forEach((num) => {
-          const target = parseInt(num.dataset.target ?? '0', 10)
-          let current = 0
-          const step = Math.max(1, Math.ceil(target / 50))
-          const timer = setInterval(() => {
-            current = Math.min(current + step, target)
-            num.textContent = String(current)
-            if (current >= target) clearInterval(timer)
-          }, 28)
-        })
+        animateCounters(entry.target)
         counterObs.unobserve(entry.target)
       },
-      { threshold: 0.3 }
+      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
     )
 
     const statsRow = document.querySelector('.stats-row')
-    if (statsRow) counterObs.observe(statsRow)
+    if (statsRow) {
+      const rect = statsRow.getBoundingClientRect()
+      if (rect.top < window.innerHeight) {
+        animateCounters(statsRow)
+      } else {
+        counterObs.observe(statsRow)
+      }
+    }
 
     return () => {
       revealObs.disconnect()
