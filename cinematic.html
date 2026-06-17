@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alex Reeves — Creative Director & Storyteller</title>
+  <meta name="description" content="Creative Director & Storyteller crafting narratives that linger.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Raleway:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ─── TOKENS ───────────────────────────────────────────────── */
+    :root {
+      --bg:       #080604;
+      --bg2:      #0E0C08;
+      --bg3:      #131009;
+      --gold:     #C9902B;
+      --gold-lt:  #E8B848;
+      --ivory:    #EDE4D0;
+      --ivory-d:  #A08C70;
+      --rust:     #7A1E10;
+      --ease:     cubic-bezier(0.25, 0.1, 0.25, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --display:  'Cormorant Garamond', Georgia, serif;
+      --body:     'Raleway', sans-serif;
+    }
+
+    /* ─── RESET ─────────────────────────────────────────────────── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; cursor: none; }
+    body {
+      background: var(--bg);
+      color: var(--ivory);
+      font-family: var(--body);
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ─── LOADER ─────────────────────────────────────────────────── */
+    #loader {
+      position: fixed; inset: 0;
+      background: var(--bg);
+      z-index: 9999;
+      display: flex; align-items: center; justify-content: center;
+      pointer-events: none;
+      transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out);
+    }
+    #loader.out { opacity: 0; transform: translateY(-20px); }
+
+    .ld-inner {
+      display: flex; flex-direction: column; align-items: center; gap: 1.6rem;
+    }
+    .ld-mono {
+      font-family: var(--display);
+      font-size: clamp(1.2rem, 3vw, 1.8rem);
+      font-weight: 300;
+      letter-spacing: 0.6em;
+      text-transform: uppercase;
+      color: var(--ivory);
+      opacity: 0;
+      animation: ld-fade 0.7s ease forwards 0.3s;
+    }
+    .ld-bar {
+      width: 0; height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+      animation: ld-bar 1.4s var(--ease-out) forwards 0.6s;
+    }
+    .ld-counter {
+      font-family: var(--display);
+      font-size: 0.65rem;
+      letter-spacing: 0.4em;
+      color: var(--ivory-d);
+      opacity: 0;
+      animation: ld-fade 0.6s ease forwards 0.8s;
+    }
+    @keyframes ld-fade { to { opacity: 1; } }
+    @keyframes ld-bar  { to { width: 160px; } }
+
+    /* ─── GRAIN (canvas-generated via JS) ───────────────────────── */
+    #grain {
+      position: fixed; inset: 0;
+      z-index: 9997;
+      pointer-events: none;
+      opacity: 0.038;
+      background-size: 220px 220px;
+      background-repeat: repeat;
+      animation: grain 0.5s steps(1) infinite;
+    }
+    @keyframes grain {
+      0%   { background-position:   0%   0%; }
+      10%  { background-position:  -5%  -5%; }
+      20%  { background-position: -10%   5%; }
+      30%  { background-position:   5% -10%; }
+      40%  { background-position: -5%  15%; }
+      50%  { background-position: -10%  5%; }
+      60%  { background-position: 15%   0%; }
+      70%  { background-position:   0%  10%; }
+      80%  { background-position:  -5%  5%; }
+      90%  { background-position: 10% -5%; }
+      100% { background-position:   0%   0%; }
+    }
+
+    /* ─── CURSOR ─────────────────────────────────────────────────── */
+    #c-dot {
+      position: fixed; width: 6px; height: 6px;
+      background: var(--gold); border-radius: 50%;
+      pointer-events: none; z-index: 10000;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.3s;
+    }
+    #c-ring {
+      position: fixed; width: 36px; height: 36px;
+      border: 1px solid rgba(201,144,43,0.45);
+      border-radius: 50%;
+      pointer-events: none; z-index: 10000;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s, height 0.3s, border-color 0.3s;
+    }
+    body.hov #c-ring {
+      width: 56px; height: 56px;
+      border-color: rgba(201,144,43,0.75);
+    }
+
+    /* ─── NAV ────────────────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 200;
+      padding: 2rem 5vw;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    nav::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, rgba(8,6,4,0.85) 0%, transparent 100%);
+    }
+    .nav-logo {
+      font-family: var(--display);
+      font-size: 1rem; font-weight: 600;
+      letter-spacing: 0.4em; text-transform: uppercase;
+      color: var(--ivory); text-decoration: none;
+      position: relative; z-index: 1;
+    }
+    .nav-links {
+      list-style: none; display: flex; gap: 3rem;
+      position: relative; z-index: 1;
+    }
+    .nav-links a {
+      font-size: 0.65rem; font-weight: 400;
+      letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--ivory-d); text-decoration: none;
+      transition: color 0.3s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute;
+      bottom: -3px; left: 0; width: 0; height: 1px;
+      background: var(--gold);
+      transition: width 0.4s var(--ease-out);
+    }
+    .nav-links a:hover { color: var(--ivory); }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* ─── HERO ───────────────────────────────────────────────────── */
+    #hero {
+      position: relative; height: 100vh; min-height: 680px;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: flex-start;
+      padding: 0 8vw;
+      overflow: hidden;
+    }
+
+    /* Ambient orbs */
+    .orb {
+      position: absolute; border-radius: 50%;
+      pointer-events: none; filter: blur(60px);
+    }
+    .orb-1 {
+      width: 70vmax; height: 70vmax;
+      right: -25vmax; top: -25vmax;
+      background: radial-gradient(circle, rgba(201,144,43,0.07) 0%, rgba(122,30,16,0.04) 45%, transparent 70%);
+      animation: orb-a 22s ease-in-out infinite alternate;
+    }
+    .orb-2 {
+      width: 45vmax; height: 45vmax;
+      left: -15vmax; bottom: -15vmax;
+      background: radial-gradient(circle, rgba(122,30,16,0.06) 0%, transparent 65%);
+      animation: orb-b 28s ease-in-out infinite alternate;
+    }
+    .orb-3 {
+      width: 25vmax; height: 25vmax;
+      left: 35%; top: 30%;
+      background: radial-gradient(circle, rgba(201,144,43,0.04) 0%, transparent 70%);
+      animation: orb-c 35s ease-in-out infinite alternate;
+    }
+    @keyframes orb-a {
+      from { transform: translate(0, 0)   scale(1); }
+      to   { transform: translate(-8vmax, 6vmax) scale(1.06); }
+    }
+    @keyframes orb-b {
+      from { transform: translate(0, 0)   scale(1); }
+      to   { transform: translate(10vmax, -8vmax) scale(1.1); }
+    }
+    @keyframes orb-c {
+      from { transform: translate(0, 0)   scale(1); }
+      to   { transform: translate(-5vmax, 8vmax) scale(0.9); }
+    }
+
+    /* Decorative horizontal rule */
+    .hero-rule {
+      position: absolute; bottom: 28%;
+      left: 0; right: 0; height: 1px;
+      background: linear-gradient(to right,
+        transparent 0%, rgba(201,144,43,0.18) 25%,
+        rgba(201,144,43,0.18) 75%, transparent 100%);
+      transform: scaleX(0); transform-origin: left center;
+      transition: transform 1.8s var(--ease-out);
+    }
+    .hero-rule.in { transform: scaleX(1); }
+
+    /* Hero text layers */
+    .hero-eyebrow {
+      font-size: 0.62rem; font-weight: 400;
+      letter-spacing: 0.45em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 2.2rem;
+      opacity: 0; transform: translateY(12px);
+      transition: opacity 0.8s ease, transform 0.8s var(--ease-out);
+    }
+    .hero-eyebrow.in { opacity: 1; transform: translateY(0); }
+
+    .hero-name {
+      font-family: var(--display);
+      font-size: clamp(4.8rem, 14vw, 12rem);
+      font-weight: 300; line-height: 0.88;
+      letter-spacing: -0.025em;
+      color: var(--ivory);
+      margin-bottom: 2.8rem;
+    }
+    .hn-row {
+      display: block; overflow: hidden; line-height: 1.05;
+    }
+    .hn-row span {
+      display: block;
+      opacity: 0; transform: translateY(105%);
+      transition: opacity 1.1s var(--ease-out), transform 1.1s var(--ease-out);
+    }
+    .hn-row span.in { opacity: 1; transform: translateY(0); }
+    .hn-row em {
+      font-style: italic; font-weight: 300;
+      color: var(--gold-lt);
+    }
+
+    .hero-tagline {
+      font-family: var(--display);
+      font-size: clamp(1rem, 2vw, 1.55rem);
+      font-weight: 300; font-style: italic;
+      color: var(--ivory-d);
+      max-width: 560px; line-height: 1.55;
+      margin-bottom: 3.5rem;
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 1s ease 0.1s, transform 1s var(--ease-out) 0.1s;
+    }
+    .hero-tagline.in { opacity: 1; transform: translateY(0); }
+
+    .hero-actions {
+      display: flex; align-items: center; gap: 2rem;
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 0.9s ease, transform 0.9s var(--ease-out);
+    }
+    .hero-actions.in { opacity: 1; transform: translateY(0); }
+
+    .btn-cine {
+      position: relative; overflow: hidden;
+      font-family: var(--body);
+      font-size: 0.65rem; font-weight: 500;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--bg); background: var(--gold);
+      padding: 1.05rem 2.6rem;
+      text-decoration: none; display: inline-block;
+      transition: color 0.45s;
+    }
+    .btn-cine::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: var(--ivory);
+      transform: translateX(-102%);
+      transition: transform 0.55s var(--ease-out);
+    }
+    .btn-cine:hover::before { transform: translateX(0); }
+    .btn-cine span { position: relative; z-index: 1; }
+
+    .btn-ghost-line {
+      font-family: var(--body);
+      font-size: 0.65rem; font-weight: 400;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--ivory-d); text-decoration: none;
+      display: flex; align-items: center; gap: 0.9rem;
+      transition: color 0.3s, gap 0.4s;
+    }
+    .btn-ghost-line::after {
+      content: ''; display: block;
+      width: 28px; height: 1px;
+      background: currentColor;
+      transition: width 0.45s var(--ease-out);
+    }
+    .btn-ghost-line:hover { color: var(--ivory); gap: 1.3rem; }
+    .btn-ghost-line:hover::after { width: 46px; }
+
+    .hero-scroll {
+      position: absolute; bottom: 2.8rem; left: 8vw;
+      display: flex; align-items: center; gap: 1rem;
+      opacity: 0; transition: opacity 0.8s ease;
+    }
+    .hero-scroll.in { opacity: 1; }
+    .scroll-bar {
+      width: 38px; height: 1px;
+      background: rgba(201,144,43,0.5);
+      position: relative; overflow: hidden;
+    }
+    .scroll-bar::after {
+      content: ''; position: absolute;
+      left: -100%; top: 0; width: 100%; height: 100%;
+      background: var(--gold-lt);
+      animation: scroll-sweep 2.2s ease-in-out infinite;
+    }
+    @keyframes scroll-sweep {
+      0%   { left: -100%; }
+      60%  { left:  100%; }
+      100% { left:  100%; }
+    }
+    .scroll-lbl {
+      font-size: 0.58rem; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--ivory-d);
+    }
+
+    /* ─── SHARED SECTION STYLES ─────────────────────────────────── */
+    .sec { padding: 10rem 8vw; }
+
+    .sec-label {
+      display: flex; align-items: center; gap: 0.8rem;
+      font-size: 0.6rem; font-weight: 400;
+      letter-spacing: 0.45em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 1rem;
+    }
+    .sec-label::before {
+      content: ''; display: inline-block;
+      width: 22px; height: 1px; background: var(--gold);
+    }
+
+    .sec-title {
+      font-family: var(--display);
+      font-size: clamp(2.6rem, 5.5vw, 5rem);
+      font-weight: 300; line-height: 1.04;
+      letter-spacing: -0.02em;
+      color: var(--ivory); margin-bottom: 3.5rem;
+    }
+    .sec-title em { font-style: italic; color: var(--gold-lt); }
+
+    /* Scroll reveal */
+    .rv {
+      opacity: 0; transform: translateY(36px);
+      transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out);
+    }
+    .rv.in { opacity: 1; transform: translateY(0); }
+
+    /* ─── ABOUT ──────────────────────────────────────────────────── */
+    #about {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 0; align-items: center;
+      padding: 8rem 8vw;
+    }
+
+    .about-copy { padding-right: 7vw; }
+
+    .about-bio {
+      font-size: 1.05rem; color: var(--ivory-d);
+      line-height: 1.9; margin-bottom: 2rem;
+    }
+    .about-bio strong { color: var(--ivory); font-weight: 400; }
+
+    .about-stats {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 2rem; margin-top: 3rem; padding-top: 3rem;
+      border-top: 1px solid rgba(201,144,43,0.14);
+    }
+    .stat-n {
+      font-family: var(--display);
+      font-size: 3.2rem; font-weight: 300;
+      color: var(--gold); line-height: 1; margin-bottom: 0.35rem;
+    }
+    .stat-l {
+      font-size: 0.6rem; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--ivory-d);
+    }
+
+    .about-img-wrap {
+      position: relative; height: 580px;
+    }
+    .about-img-inner {
+      position: absolute; inset: 0; overflow: hidden;
+      background: linear-gradient(140deg, var(--bg3) 0%, #20170A 100%);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .about-img-inner::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(140deg, transparent 50%, rgba(201,144,43,0.04) 100%);
+    }
+    .photo-ph {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 1rem; opacity: 0.25;
+    }
+    .photo-ph svg {
+      width: 52px; height: 52px;
+      stroke: var(--ivory-d); stroke-width: 0.8; fill: none;
+    }
+    .photo-ph-lbl {
+      font-size: 0.58rem; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--ivory-d);
+    }
+    .about-img-border {
+      position: absolute;
+      top: 2.2rem; right: -2.2rem; bottom: -2.2rem; left: 2.2rem;
+      border: 1px solid rgba(201,144,43,0.2);
+      pointer-events: none; z-index: -1;
+    }
+
+    /* ─── WORK ───────────────────────────────────────────────────── */
+    #work {
+      background: var(--bg2); position: relative; overflow: hidden;
+    }
+    #work::before {
+      content: ''; position: absolute;
+      top: -30%; right: -10%;
+      width: 60vmax; height: 60vmax;
+      background: radial-gradient(circle, rgba(201,144,43,0.04) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .work-head {
+      display: flex; justify-content: space-between;
+      align-items: flex-end; margin-bottom: 5rem; flex-wrap: wrap; gap: 2rem;
+    }
+    .work-head .sec-title { margin-bottom: 0; }
+
+    .archive-link {
+      font-size: 0.62rem; font-weight: 400;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--gold); text-decoration: none;
+      display: flex; align-items: center; gap: 0.7rem;
+      transition: gap 0.35s;
+    }
+    .archive-link::after { content: '→'; font-size: 0.9rem; }
+    .archive-link:hover { gap: 1.1rem; }
+
+    .cards {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 3px;
+    }
+
+    .card {
+      position: relative; aspect-ratio: 3/4;
+      overflow: hidden; cursor: none;
+    }
+
+    .card-bg {
+      width: 100%; height: 100%;
+      position: absolute; inset: 0;
+      transition: transform 0.95s var(--ease-out);
+    }
+    .card:hover .card-bg { transform: scale(1.07); }
+
+    .card:nth-child(1) .card-bg {
+      background: linear-gradient(155deg, #1C1108 0%, #2E1A0B 50%, #3D1406 100%);
+    }
+    .card:nth-child(2) .card-bg {
+      background: linear-gradient(155deg, #0C1018 0%, #122030 50%, #0A1830 100%);
+    }
+    .card:nth-child(3) .card-bg {
+      background: linear-gradient(155deg, #0A0808 0%, #1A1208 50%, #221A06 100%);
+    }
+
+    /* Abstract geometry per card */
+    .card-geo {
+      position: absolute; inset: 0; overflow: hidden; pointer-events: none;
+    }
+    .geo-ring {
+      position: absolute; border-radius: 50%;
+      border: 1px solid rgba(201,144,43,0.14);
+    }
+    .card:nth-child(1) .geo-ring { width: 200px; height: 200px; top: 12%; left: 8%; animation: geo-spin 32s linear infinite; }
+    .card:nth-child(1) .geo-ring.r2 { width: 120px; height: 120px; top: 25%; left: 20%; border-color: rgba(201,144,43,0.08); animation-duration: 20s; animation-direction: reverse; }
+    .card:nth-child(2) .geo-ring { width: 240px; height: 240px; bottom: 5%; right: -40px; border-color: rgba(80,140,210,0.12); animation: geo-spin 42s linear infinite reverse; }
+    .card:nth-child(2) .geo-ring.r2 { width: 100px; height: 100px; top: 15%; left: 20%; border-color: rgba(80,140,210,0.08); animation-duration: 25s; }
+    .card:nth-child(3) .geo-ring { width: 180px; height: 180px; top: 50%; left: 50%; margin: -90px 0 0 -90px; animation: geo-spin 38s linear infinite; }
+    .card:nth-child(3) .geo-ring.r2 { width: 280px; height: 280px; top: 50%; left: 50%; margin: -140px 0 0 -140px; border-color: rgba(201,144,43,0.05); animation-duration: 55s; animation-direction: reverse; }
+
+    @keyframes geo-spin { to { transform: rotate(360deg); } }
+
+    .geo-line {
+      position: absolute; background: rgba(201,144,43,0.07);
+    }
+    .card:nth-child(1) .geo-line { width: 1px; height: 60%; top: 20%; left: 50%; }
+    .card:nth-child(2) .geo-line { width: 50%; height: 1px; top: 40%; left: 25%; background: rgba(80,140,210,0.07); }
+    .card:nth-child(3) .geo-line { width: 1px; height: 40%; top: 30%; right: 30%; }
+
+    .card-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top,
+        rgba(8,6,4,0.97) 0%,
+        rgba(8,6,4,0.25) 45%,
+        transparent 100%);
+      display: flex; flex-direction: column;
+      justify-content: flex-end; padding: 2.2rem;
+      transition: background 0.5s;
+    }
+    .card:hover .card-overlay {
+      background: linear-gradient(to top,
+        rgba(8,6,4,1)    0%,
+        rgba(8,6,4,0.55) 50%,
+        rgba(8,6,4,0.12) 100%);
+    }
+
+    .card-num {
+      position: absolute; top: 1.4rem; right: 1.4rem;
+      font-family: var(--display);
+      font-size: 4.5rem; font-weight: 300;
+      color: rgba(201,144,43,0.07); line-height: 1;
+      transition: color 0.5s var(--ease-out), transform 0.6s var(--ease-out);
+    }
+    .card:hover .card-num {
+      color: rgba(201,144,43,0.13);
+      transform: translateY(-8px);
+    }
+
+    .card-tags { display: flex; gap: 0.5rem; margin-bottom: 0.9rem; }
+    .c-tag {
+      font-size: 0.52rem; letter-spacing: 0.24em;
+      text-transform: uppercase; color: var(--gold);
+      border: 1px solid rgba(201,144,43,0.3);
+      padding: 0.22rem 0.65rem;
+    }
+
+    .card-title {
+      font-family: var(--display);
+      font-size: clamp(1.5rem, 2.2vw, 2rem);
+      font-weight: 300; line-height: 1.15;
+      color: var(--ivory); margin-bottom: 0.7rem;
+      transition: transform 0.55s var(--ease-out);
+    }
+    .card:hover .card-title { transform: translateY(-4px); }
+
+    .card-desc {
+      font-size: 0.78rem; color: var(--ivory-d);
+      line-height: 1.75; max-height: 0; overflow: hidden;
+      opacity: 0; transition: max-height 0.6s var(--ease-out), opacity 0.4s;
+    }
+    .card:hover .card-desc { max-height: 90px; opacity: 1; }
+
+    .card-arrow {
+      position: absolute; bottom: 2rem; right: 1.8rem;
+      width: 38px; height: 38px;
+      border: 1px solid rgba(201,144,43,0.38);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold); font-size: 0.9rem;
+      opacity: 0; transform: scale(0.75);
+      transition: opacity 0.4s, transform 0.4s var(--ease-out);
+    }
+    .card:hover .card-arrow { opacity: 1; transform: scale(1); }
+
+    /* ─── SKILLS ─────────────────────────────────────────────────── */
+    #skills { position: relative; overflow: hidden; }
+    #skills::before {
+      content: ''; position: absolute;
+      bottom: -25%; left: -10%;
+      width: 80vmax; height: 80vmax;
+      background: radial-gradient(circle, rgba(122,30,16,0.05) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .sk-grid {
+      display: grid; grid-template-columns: 1fr 1.1fr;
+      gap: 6rem; align-items: start;
+    }
+
+    .sk-intro {
+      font-size: 0.98rem; color: var(--ivory-d);
+      line-height: 1.9; margin-bottom: 3rem;
+    }
+
+    .sk-tabs { display: flex; flex-direction: column; gap: 0; }
+    .sk-tab {
+      font-family: var(--body);
+      font-size: 0.63rem; font-weight: 400;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      background: none; border: none; cursor: none;
+      color: var(--ivory-d); padding: 1rem 0;
+      text-align: left;
+      border-bottom: 1px solid rgba(238,228,210,0.05);
+      position: relative; overflow: hidden;
+      transition: color 0.3s;
+    }
+    .sk-tab::before {
+      content: ''; position: absolute;
+      left: 0; top: 0; bottom: 0; width: 0;
+      background: rgba(201,144,43,0.07);
+      transition: width 0.5s var(--ease-out);
+    }
+    .sk-tab:hover { color: var(--ivory); }
+    .sk-tab.on {
+      color: var(--gold);
+      padding-left: 1rem;
+    }
+    .sk-tab.on::before { width: 100%; }
+
+    /* Animated indicator dot */
+    .sk-tab.on::after {
+      content: ''; position: absolute;
+      left: 0; top: 50%; transform: translateY(-50%);
+      width: 3px; height: 100%;
+      background: var(--gold);
+    }
+
+    .sk-panel { display: none; }
+    .sk-panel.on {
+      display: block;
+      animation: panel-in 0.5s var(--ease-out) forwards;
+    }
+    @keyframes panel-in {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .chips {
+      display: flex; flex-wrap: wrap; gap: 0.7rem;
+      margin-bottom: 2.5rem;
+    }
+    .chip {
+      font-size: 0.68rem; font-weight: 400;
+      letter-spacing: 0.08em;
+      color: var(--ivory-d);
+      border: 1px solid rgba(238,228,210,0.1);
+      padding: 0.55rem 1.1rem;
+      cursor: none;
+      transition: color 0.3s, border-color 0.3s, background 0.3s;
+    }
+    .chip:hover {
+      color: var(--ivory);
+      border-color: rgba(201,144,43,0.38);
+      background: rgba(201,144,43,0.05);
+    }
+    .chip.hi { color: var(--gold); border-color: rgba(201,144,43,0.3); }
+
+    .sk-quote {
+      font-family: var(--display);
+      font-size: 1.05rem; font-style: italic; font-weight: 300;
+      color: var(--ivory-d); line-height: 1.75;
+      border-left: 1px solid rgba(201,144,43,0.3);
+      padding-left: 1.4rem;
+    }
+
+    /* ─── CONTACT ────────────────────────────────────────────────── */
+    #contact {
+      background: var(--bg2);
+      text-align: center; position: relative;
+      overflow: hidden; padding: 11rem 8vw;
+    }
+    #contact::before {
+      content: ''; position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80vmax; height: 80vmax;
+      background: radial-gradient(circle, rgba(201,144,43,0.05) 0%, transparent 55%);
+      pointer-events: none;
+    }
+
+    .ct-eyebrow {
+      font-size: 0.62rem; letter-spacing: 0.45em;
+      text-transform: uppercase; color: var(--gold);
+      margin-bottom: 2rem;
+    }
+    .ct-headline {
+      font-family: var(--display);
+      font-size: clamp(3rem, 8vw, 7rem);
+      font-weight: 300; line-height: 1.0;
+      letter-spacing: -0.022em; color: var(--ivory);
+      margin-bottom: 2.5rem;
+    }
+    .ct-headline em { font-style: italic; color: var(--gold-lt); }
+
+    .ct-sub {
+      font-size: 0.98rem; color: var(--ivory-d);
+      max-width: 440px; margin: 0 auto 3.5rem;
+      line-height: 1.8;
+    }
+
+    .ct-email {
+      display: inline-block;
+      font-family: var(--display);
+      font-size: clamp(1.2rem, 2.4vw, 1.75rem);
+      font-weight: 300; color: var(--ivory);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(201,144,43,0.38);
+      padding-bottom: 0.3rem; margin-bottom: 4rem;
+      transition: color 0.3s, border-color 0.3s;
+      letter-spacing: 0.02em;
+    }
+    .ct-email:hover { color: var(--gold); border-color: var(--gold); }
+
+    .socials {
+      display: flex; justify-content: center; gap: 3rem;
+      margin-top: 2.5rem;
+    }
+    .soc {
+      font-size: 0.6rem; font-weight: 400;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--ivory-d); text-decoration: none;
+      position: relative; transition: color 0.3s;
+    }
+    .soc::after {
+      content: ''; position: absolute;
+      bottom: -3px; left: 0; width: 0; height: 1px;
+      background: var(--gold);
+      transition: width 0.4s var(--ease-out);
+    }
+    .soc:hover { color: var(--ivory); }
+    .soc:hover::after { width: 100%; }
+
+    /* ─── FOOTER ─────────────────────────────────────────────────── */
+    footer {
+      padding: 2.5rem 8vw;
+      display: flex; justify-content: space-between; align-items: center;
+      border-top: 1px solid rgba(238,228,210,0.045);
+    }
+    .f-copy, .f-credit {
+      font-size: 0.58rem; letter-spacing: 0.18em;
+      color: rgba(160,140,112,0.38);
+    }
+
+    /* ─── RESPONSIVE ─────────────────────────────────────────────── */
+    @media (max-width: 960px) {
+      nav { padding: 1.5rem 6vw; }
+      .nav-links { display: none; }
+      .sec { padding: 7rem 6vw; }
+      #hero { padding: 0 6vw; }
+
+      #about {
+        grid-template-columns: 1fr;
+        padding: 7rem 6vw;
+      }
+      .about-copy { padding-right: 0; margin-bottom: 5rem; }
+      .about-img-wrap { height: 380px; }
+
+      .cards { grid-template-columns: 1fr; gap: 4px; }
+      .card { aspect-ratio: 4/3; }
+
+      .sk-grid { grid-template-columns: 1fr; gap: 3.5rem; }
+
+      footer { flex-direction: column; gap: 0.8rem; text-align: center; }
+    }
+
+    @media (max-width: 560px) {
+      .hero-name { font-size: clamp(3.2rem, 16vw, 4.5rem); }
+      .about-stats { grid-template-columns: repeat(2, 1fr); }
+      .hero-actions { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+      .socials { gap: 2rem; flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Loader -->
+  <div id="loader">
+    <div class="ld-inner">
+      <div class="ld-mono">Alex Reeves</div>
+      <div class="ld-bar"></div>
+      <div class="ld-counter">Est. 2013 · Los Angeles</div>
+    </div>
+  </div>
+
+  <!-- Grain overlay (background set by JS) -->
+  <div id="grain" aria-hidden="true"></div>
+
+  <!-- Custom cursor -->
+  <div id="c-dot"  aria-hidden="true"></div>
+  <div id="c-ring" aria-hidden="true"></div>
+
+  <!-- Navigation -->
+  <nav>
+    <a href="#hero" class="nav-logo">A · R</a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- ═══════════════════════ HERO ═══════════════════════════════ -->
+  <section id="hero">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="hero-rule" id="heroRule"></div>
+
+    <div class="hero-eyebrow" id="heroEye">Creative Director &nbsp;·&nbsp; Storyteller &nbsp;·&nbsp; Los Angeles</div>
+
+    <h1 class="hero-name">
+      <span class="hn-row"><span id="hn0">Alex</span></span>
+      <span class="hn-row"><span id="hn1"><em>Reeves</em></span></span>
+    </h1>
+
+    <p class="hero-tagline" id="heroTag">
+      Crafting narratives that linger — in film, in brands,<br>
+      in the spaces between silence and sound.
+    </p>
+
+    <div class="hero-actions" id="heroAct">
+      <a href="#work" class="btn-cine"><span>View Work</span></a>
+      <a href="#about" class="btn-ghost-line">About Me</a>
+    </div>
+
+    <div class="hero-scroll" id="heroScroll">
+      <div class="scroll-bar"></div>
+      <span class="scroll-lbl">Scroll</span>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════ ABOUT ══════════════════════════════ -->
+  <section id="about">
+    <div class="about-copy rv">
+      <div class="sec-label">About</div>
+      <h2 class="sec-title">The person<br>behind the <em>lens</em></h2>
+
+      <p class="about-bio">
+        I'm Alex Reeves — a <strong>creative director</strong> and visual storyteller based in Los Angeles.
+        For over a decade I've shaped identities for cultural institutions, luxury brands, and independent
+        filmmakers who believe that beauty is a form of intelligence.
+      </p>
+      <p class="about-bio">
+        My process begins in the margins: with <strong>half-written sentences</strong>, with the quality
+        of afternoon light, with what is left deliberately unsaid. I translate these instincts into work
+        that resonates long after first contact.
+      </p>
+
+      <div class="about-stats">
+        <div>
+          <div class="stat-n">12+</div>
+          <div class="stat-l">Years Active</div>
+        </div>
+        <div>
+          <div class="stat-n">84</div>
+          <div class="stat-l">Projects</div>
+        </div>
+        <div>
+          <div class="stat-n">3×</div>
+          <div class="stat-l">Award Winner</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="about-img-wrap rv" style="transition-delay:0.18s">
+      <div class="about-img-inner">
+        <div class="photo-ph">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4.5"/><path d="M4 20c0-4 3.5-7 8-7s8 3 8 7"/></svg>
+          <span class="photo-ph-lbl">Photo</span>
+        </div>
+      </div>
+      <div class="about-img-border"></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════ WORK ═══════════════════════════════ -->
+  <section id="work" class="sec">
+    <div class="work-head rv">
+      <div>
+        <div class="sec-label">Selected Work</div>
+        <h2 class="sec-title">Recent<br><em>Projects</em></h2>
+      </div>
+      <a href="#" class="archive-link">View Archive</a>
+    </div>
+
+    <div class="cards">
+      <!-- Card 1 -->
+      <div class="card rv">
+        <div class="card-bg">
+          <div class="card-geo">
+            <div class="geo-ring"></div>
+            <div class="geo-ring r2"></div>
+            <div class="geo-line"></div>
+          </div>
+        </div>
+        <div class="card-num">01</div>
+        <div class="card-overlay">
+          <div class="card-tags">
+            <span class="c-tag">Film</span>
+            <span class="c-tag">Identity</span>
+          </div>
+          <h3 class="card-title">Vesper<br>Collective</h3>
+          <p class="card-desc">A complete visual identity and campaign for an independent film collective — from logotype to opening credits.</p>
+          <div class="card-arrow">→</div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="card rv" style="transition-delay:0.14s">
+        <div class="card-bg">
+          <div class="card-geo">
+            <div class="geo-ring"></div>
+            <div class="geo-ring r2"></div>
+            <div class="geo-line"></div>
+          </div>
+        </div>
+        <div class="card-num">02</div>
+        <div class="card-overlay">
+          <div class="card-tags">
+            <span class="c-tag">Luxury</span>
+            <span class="c-tag">Campaign</span>
+          </div>
+          <h3 class="card-title">Maison<br>Aurore</h3>
+          <p class="card-desc">Art direction and photography for a Parisian couture house launching their first fragrance line.</p>
+          <div class="card-arrow">→</div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="card rv" style="transition-delay:0.28s">
+        <div class="card-bg">
+          <div class="card-geo">
+            <div class="geo-ring"></div>
+            <div class="geo-ring r2"></div>
+            <div class="geo-line"></div>
+          </div>
+        </div>
+        <div class="card-num">03</div>
+        <div class="card-overlay">
+          <div class="card-tags">
+            <span class="c-tag">Documentary</span>
+            <span class="c-tag">Branding</span>
+          </div>
+          <h3 class="card-title">The Salt<br>&amp; Light Doc</h3>
+          <p class="card-desc">Feature documentary exploring artisan food culture across the American Southwest.</p>
+          <div class="card-arrow">→</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════ SKILLS ═════════════════════════════ -->
+  <section id="skills" class="sec">
+    <div class="sk-grid">
+      <div class="rv">
+        <div class="sec-label">Expertise</div>
+        <h2 class="sec-title">Where craft<br>meets <em>vision</em></h2>
+        <p class="sk-intro">
+          A cross-disciplinary practice built over twelve years of deliberate work —
+          from the conceptual to the pixel-perfect.
+        </p>
+        <div class="sk-tabs">
+          <button class="sk-tab on" data-p="dir">Direction &amp; Strategy</button>
+          <button class="sk-tab"    data-p="vis">Visual &amp; Design</button>
+          <button class="sk-tab"    data-p="mot">Motion &amp; Film</button>
+          <button class="sk-tab"    data-p="dig">Digital &amp; Interactive</button>
+        </div>
+      </div>
+
+      <div class="rv" style="transition-delay:0.2s">
+        <div class="sk-panel on" id="p-dir">
+          <div class="chips">
+            <span class="chip hi">Creative Direction</span>
+            <span class="chip hi">Brand Strategy</span>
+            <span class="chip">Art Direction</span>
+            <span class="chip">Visual Narrative</span>
+            <span class="chip">Campaign Concept</span>
+            <span class="chip">Editorial Direction</span>
+            <span class="chip">Cultural Strategy</span>
+            <span class="chip">Identity Systems</span>
+          </div>
+          <p class="sk-quote">Strategy is the invisible architecture beneath every beautiful thing. I build frameworks that make creative teams fearless.</p>
+        </div>
+
+        <div class="sk-panel" id="p-vis">
+          <div class="chips">
+            <span class="chip hi">Typography</span>
+            <span class="chip hi">Photography</span>
+            <span class="chip">Print Design</span>
+            <span class="chip">Color Theory</span>
+            <span class="chip">Logo &amp; Mark</span>
+            <span class="chip">Publication Design</span>
+            <span class="chip">Spatial Design</span>
+            <span class="chip">Illustration Direction</span>
+          </div>
+          <p class="sk-quote">Every visual decision is a sentence in a larger story. I obsess over the grammar of images.</p>
+        </div>
+
+        <div class="sk-panel" id="p-mot">
+          <div class="chips">
+            <span class="chip hi">Cinematography</span>
+            <span class="chip hi">Film Editing</span>
+            <span class="chip">Motion Graphics</span>
+            <span class="chip">Sound Design</span>
+            <span class="chip">Commercial Direction</span>
+            <span class="chip">Documentary Form</span>
+            <span class="chip">Color Grading</span>
+          </div>
+          <p class="sk-quote">Time is the medium. Film taught me that restraint is the highest form of expression.</p>
+        </div>
+
+        <div class="sk-panel" id="p-dig">
+          <div class="chips">
+            <span class="chip hi">Web Experience</span>
+            <span class="chip hi">Interaction Design</span>
+            <span class="chip">Figma</span>
+            <span class="chip">Creative Coding</span>
+            <span class="chip">UI Direction</span>
+            <span class="chip">Digital Campaigns</span>
+            <span class="chip">Immersive Experiences</span>
+          </div>
+          <p class="sk-quote">The screen is the newest canvas. I design digital experiences with the same intentionality as a film frame.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════ CONTACT ════════════════════════════ -->
+  <section id="contact">
+    <div class="rv">
+      <p class="ct-eyebrow">Get in Touch</p>
+      <h2 class="ct-headline">Let's make<br><em>something</em><br>unforgettable</h2>
+      <p class="ct-sub">
+        Available for select commissions, collaborations,<br>and conversations worth having.
+      </p>
+      <a href="mailto:alex@reeves.studio" class="ct-email">alex@reeves.studio</a>
+      <div class="socials">
+        <a href="#" class="soc">Instagram</a>
+        <a href="#" class="soc">LinkedIn</a>
+        <a href="#" class="soc">Vimeo</a>
+        <a href="#" class="soc">Behance</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <span class="f-copy">© 2026 Alex Reeves. All rights reserved.</span>
+    <span class="f-credit">Designed &amp; built with intention.</span>
+  </footer>
+
+  <script>
+  (() => {
+    'use strict';
+
+    /* ── GRAIN CANVAS ─────────────────────────────────────────── */
+    const gc = document.createElement('canvas');
+    gc.width = gc.height = 220;
+    const gx = gc.getContext('2d');
+    const gd = gx.createImageData(220, 220);
+    for (let i = 0; i < gd.data.length; i += 4) {
+      const v = (Math.random() * 255) | 0;
+      gd.data[i] = gd.data[i+1] = gd.data[i+2] = v;
+      gd.data[i+3] = 255;
+    }
+    gx.putImageData(gd, 0, 0);
+    document.getElementById('grain').style.backgroundImage = `url(${gc.toDataURL()})`;
+
+    /* ── CURSOR ───────────────────────────────────────────────── */
+    const dot  = document.getElementById('c-dot');
+    const ring = document.getElementById('c-ring');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      dot.style.left = mx + 'px';
+      dot.style.top  = my + 'px';
+    });
+
+    (function loop() {
+      rx += (mx - rx) * 0.11;
+      ry += (my - ry) * 0.11;
+      ring.style.left = rx + 'px';
+      ring.style.top  = ry + 'px';
+      requestAnimationFrame(loop);
+    })();
+
+    document.querySelectorAll('a, button, .card').forEach(el => {
+      el.addEventListener('mouseenter', () => document.body.classList.add('hov'));
+      el.addEventListener('mouseleave', () => document.body.classList.remove('hov'));
+    });
+
+    /* ── LOADER ───────────────────────────────────────────────── */
+    function launchHero() {
+      const rule  = document.getElementById('heroRule');
+      const eye   = document.getElementById('heroEye');
+      const hn0   = document.getElementById('hn0');
+      const hn1   = document.getElementById('hn1');
+      const tag   = document.getElementById('heroTag');
+      const act   = document.getElementById('heroAct');
+      const scr   = document.getElementById('heroScroll');
+
+      const at = (el, delay) => setTimeout(() => el.classList.add('in'), delay);
+      at(eye,  80);
+      at(hn0,  280);
+      at(hn1,  460);
+      at(rule, 550);
+      at(tag,  820);
+      at(act,  1050);
+      at(scr,  1350);
+    }
+
+    window.addEventListener('load', () => {
+      const loader = document.getElementById('loader');
+      setTimeout(() => {
+        loader.classList.add('out');
+        setTimeout(() => { loader.style.display = 'none'; launchHero(); }, 900);
+      }, 1900);
+    });
+
+    /* ── PARALLAX ─────────────────────────────────────────────── */
+    const heroName = document.querySelector('.hero-name');
+    const heroTag2 = document.getElementById('heroTag');
+
+    window.addEventListener('scroll', () => {
+      const y = window.scrollY;
+      if (heroName) heroName.style.transform = `translateY(${y * 0.12}px)`;
+      if (heroTag2 && heroTag2.classList.contains('in'))
+        heroTag2.style.transform = `translateY(${y * 0.07}px)`;
+    }, { passive: true });
+
+    /* ── SCROLL REVEAL ────────────────────────────────────────── */
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.rv').forEach(el => io.observe(el));
+
+    /* ── SKILLS TABS ──────────────────────────────────────────── */
+    document.querySelectorAll('.sk-tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.sk-tab').forEach(b => b.classList.remove('on'));
+        document.querySelectorAll('.sk-panel').forEach(p => p.classList.remove('on'));
+        btn.classList.add('on');
+        document.getElementById('p-' + btn.dataset.p).classList.add('on');
+      });
+    });
+
+    /* ── SMOOTH ANCHOR ─────────────────────────────────────────── */
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const tgt = document.querySelector(a.getAttribute('href'));
+        if (tgt) { e.preventDefault(); tgt.scrollIntoView({ behavior: 'smooth' }); }
+      });
+    });
+  })();
+  </script>
+</body>
+</html>
