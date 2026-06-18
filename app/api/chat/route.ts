@@ -28,26 +28,29 @@ const FALLBACK = "Sorry, I couldn't respond right now. Please email Ibrahim at I
 
 export async function POST(req: NextRequest) {
   try {
-    const { messages } = await req.json()
+    console.log('chat: step 1 start')
+    const body = await req.json()
+    console.log('chat: step 2 body keys:', Object.keys(body))
+    const { messages } = body
 
-    // Build conversation history as readable text so context is preserved
-    const history = messages
+    const history = (messages as Array<{ role: string; content: string }>)
       .slice(0, -1)
-      .map((m: { role: string; content: string }) =>
-        `${m.role === 'user' ? 'Visitor' : 'You'}: ${m.content}`
-      )
+      .map(m => `${m.role === 'user' ? 'Visitor' : 'You'}: ${m.content}`)
       .join('\n')
 
-    const lastQuestion = messages[messages.length - 1]?.content ?? ''
+    const lastQuestion = (messages as Array<{ role: string; content: string }>)[messages.length - 1]?.content ?? ''
 
     const prompt = history
       ? `${CONTEXT}\n\nConversation so far:\n${history}\n\nVisitor: ${lastQuestion}`
       : `${CONTEXT}\n\nVisitor: ${lastQuestion}`
 
+    console.log('chat: step 3 prompt length:', prompt.length)
+
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash-lite',
       contents: [{ role: 'user', parts: [{ text: prompt }] }],
     })
+    console.log('chat: step 4 got response')
 
     const parts: { text?: string; thought?: boolean }[] =
       response.candidates?.[0]?.content?.parts ?? []
