@@ -59,7 +59,20 @@ export async function POST(req: NextRequest) {
     )
 
     const data = await apiRes.json()
-    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || FALLBACK
+
+    // gemini-2.5 may return thinking parts alongside the actual response
+    const parts: { text?: string; thought?: boolean }[] =
+      data?.candidates?.[0]?.content?.parts ?? []
+    const finishReason = data?.candidates?.[0]?.finishReason ?? 'UNKNOWN'
+    const responseText = parts
+      .filter(p => !p.thought && p.text)
+      .map(p => p.text)
+      .join('')
+      .trim()
+
+    console.log(`chat: parts=${parts.length} finish=${finishReason} textLen=${responseText.length}`)
+
+    const text = responseText || FALLBACK
 
     return new Response(JSON.stringify({ text }), {
       headers: { 'Content-Type': 'application/json' },
