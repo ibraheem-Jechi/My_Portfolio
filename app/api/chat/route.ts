@@ -8,6 +8,7 @@ const SYSTEM = `You are an AI assistant for Ibrahim El Jichi's portfolio. Help r
 About Ibrahim:
 - Full-Stack Software Engineer based in Lebanon, open to remote work and relocation
 - Currently Software Engineer at HAUZ (London, UK, remote) — building CreatorHQ, an AI-powered platform for creator business management
+- 2+ years of professional experience
 - B.Eng. Computer Science & Communication Engineering, Lebanese International University (2020–2024)
 - Languages: Arabic, English, French
 
@@ -41,34 +42,34 @@ export async function POST(req: NextRequest) {
   try {
     const { messages } = await req.json()
 
-    const history = messages.slice(0, -1).map((msg: { role: string; content: string }) => ({
+    const contents = messages.map((msg: { role: string; content: string }) => ({
       role: msg.role === 'assistant' ? 'model' : 'user',
       parts: [{ text: msg.content }],
     }))
 
-    const lastMessage = messages[messages.length - 1]
-
-    const chat = ai.chats.create({
+    const stream = await ai.models.generateContentStream({
       model: 'gemini-2.5-flash-lite',
-      config: { systemInstruction: SYSTEM },
-      history,
+      contents,
+      config: {
+        systemInstruction: SYSTEM,
+        maxOutputTokens: 300,
+      },
     })
-
-    const result = await chat.sendMessageStream({ message: lastMessage.content })
 
     const encoder = new TextEncoder()
 
     const readable = new ReadableStream({
       async start(controller) {
         try {
-          for await (const chunk of result) {
+          for await (const chunk of stream) {
             const text = chunk.text
             if (text) {
               const data = JSON.stringify({ delta: text })
               controller.enqueue(encoder.encode(`data: ${data}\n\n`))
             }
           }
-        } catch {
+        } catch (e) {
+          console.error('Stream error:', e)
           const err = JSON.stringify({ delta: "Sorry, I couldn't connect right now. Please email Ibrahim at Ibrahimj02@outlook.com." })
           controller.enqueue(encoder.encode(`data: ${err}\n\n`))
         }
