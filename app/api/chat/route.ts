@@ -28,10 +28,7 @@ const FALLBACK = "Sorry, I couldn't respond right now. Please email Ibrahim at I
 
 export async function POST(req: NextRequest) {
   try {
-    console.log('chat: step 1 start')
-    const body = await req.json()
-    console.log('chat: step 2 body keys:', Object.keys(body))
-    const { messages } = body
+    const { messages } = await req.json()
 
     const history = (messages as Array<{ role: string; content: string }>)
       .slice(0, -1)
@@ -44,13 +41,10 @@ export async function POST(req: NextRequest) {
       ? `${CONTEXT}\n\nConversation so far:\n${history}\n\nVisitor: ${lastQuestion}`
       : `${CONTEXT}\n\nVisitor: ${lastQuestion}`
 
-    console.log('chat: step 3 prompt length:', prompt.length)
-
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash-lite',
       contents: [{ role: 'user', parts: [{ text: prompt }] }],
     })
-    console.log('chat: step 4 got response')
 
     const parts: { text?: string; thought?: boolean }[] =
       response.candidates?.[0]?.content?.parts ?? []
