@@ -1,7 +1,4 @@
-import { GoogleGenAI } from '@google/genai'
 import { NextRequest } from 'next/server'
-
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! })
 
 const SYSTEM = `You are an AI assistant for Ibrahim El Jichi's portfolio. Help recruiters and visitors learn about Ibrahim in a friendly, concise, professional way.
 
@@ -21,60 +18,56 @@ Key Skills:
 - AI/APIs: Anthropic Claude API, OpenAI, Gmail API, REST APIs
 
 Projects:
-1. CreatorHQ (in progress, private) — AI platform at HAUZ: brand deal tracking, contract handling, revenue monitoring, Gmail integration with intelligent automation workflows. Stack: AI/ML, Node.js, MongoDB, REST APIs, Gmail API.
-2. Supermarket POS System — Full POS with barcode scanning, automated billing, multi-role access (Admin/Clerk/Accountant), sales analytics, real-time inventory. Stack: MERN.
-3. RentHub — Student housing platform with property listings, search & filtering, user auth. Stack: Next.js, React, MongoDB.
-4. Digital Hub Website — Responsive site with admin dashboard and role-based access control. Stack: Laravel, PHP, MySQL.
+1. CreatorHQ (in progress, private) — AI platform at HAUZ: brand deal tracking, contract handling, revenue monitoring, Gmail integration with intelligent automation workflows.
+2. Supermarket POS System — Full POS with barcode scanning, automated billing, multi-role access, sales analytics, real-time inventory. Stack: MERN.
+3. RentHub — Student housing platform with listings, search & filtering, user auth. Stack: Next.js, React, MongoDB.
+4. Digital Hub Website — Responsive site with admin dashboard and RBAC. Stack: Laravel, PHP, MySQL.
 
-Contact:
-- Email: Ibrahimj02@outlook.com
-- Phone: +961 78 860 266
-- GitHub: github.com/ibraheem-Jechi
-- LinkedIn: linkedin.com/in/ibrahim-el-jichi
+Contact: Ibrahimj02@outlook.com | +961 78 860 266 | github.com/ibraheem-Jechi | linkedin.com/in/ibrahim-el-jichi
 
 Rules:
-- Keep every reply to 2–4 sentences maximum. Be warm but professional.
-- If asked about salary expectations or very personal topics, say Ibrahim would be happy to discuss those directly by email.
+- Keep every reply to 2–4 sentences. Be warm but professional.
+- If asked about salary or very personal topics, say Ibrahim would be happy to discuss directly by email.
 - Never make up facts not listed above.
 - If someone asks if Ibrahim is available, say yes — he is open to new opportunities.`
+
+const FALLBACK = "Sorry, I couldn't respond right now. Please email Ibrahim at Ibrahimj02@outlook.com."
 
 export async function POST(req: NextRequest) {
   try {
     const { messages } = await req.json()
 
-    const systemTurn = [
-      {
-        role: 'user',
-        parts: [{ text: `SYSTEM INSTRUCTIONS (follow for every reply):\n${SYSTEM}` }],
-      },
-      {
-        role: 'model',
-        parts: [{ text: 'Understood. I will represent Ibrahim accurately and concisely.' }],
-      },
+    const contents = [
+      { role: 'user', parts: [{ text: `SYSTEM INSTRUCTIONS:\n${SYSTEM}` }] },
+      { role: 'model', parts: [{ text: 'Understood. I will represent Ibrahim accurately and concisely.' }] },
+      ...messages.map((msg: { role: string; content: string }) => ({
+        role: msg.role === 'assistant' ? 'model' : 'user',
+        parts: [{ text: msg.content }],
+      })),
     ]
 
-    const userContents = messages.map((msg: { role: string; content: string }) => ({
-      role: msg.role === 'assistant' ? 'model' : 'user',
-      parts: [{ text: msg.content }],
-    }))
+    const apiRes = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents,
+          generationConfig: { maxOutputTokens: 300 },
+        }),
+      }
+    )
 
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash-lite',
-      contents: [...systemTurn, ...userContents],
-    })
-
-    const text =
-      response.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ??
-      "Sorry, I couldn't respond right now. Please email Ibrahim at Ibrahimj02@outlook.com."
+    const data = await apiRes.json()
+    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || FALLBACK
 
     return new Response(JSON.stringify({ text }), {
       headers: { 'Content-Type': 'application/json' },
     })
   } catch (e) {
-    console.error('Chat API error:', e)
-    return new Response(
-      JSON.stringify({ text: "Sorry, I couldn't connect right now. Please email Ibrahim at Ibrahimj02@outlook.com." }),
-      { headers: { 'Content-Type': 'application/json' } }
-    )
+    console.error('Chat error:', e)
+    return new Response(JSON.stringify({ text: FALLBACK }), {
+      headers: { 'Content-Type': 'application/json' },
+    })
   }
 }

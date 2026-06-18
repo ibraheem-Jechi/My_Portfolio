@@ -46,7 +46,8 @@ export default function AIChat() {
         body: JSON.stringify({ messages: nextMessages }),
       })
 
-      const { text } = await res.json()
+      const data = await res.json()
+      const text: string = data?.text || "Sorry, I couldn't respond right now. Please email Ibrahim at Ibrahimj02@outlook.com."
 
       // Add empty assistant message then type it out client-side
       setMessages((prev) => [...prev, { role: 'assistant', content: '' }])
