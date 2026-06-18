@@ -37,14 +37,10 @@ export async function POST(req: NextRequest) {
   try {
     const { messages } = await req.json()
 
-    const contents = [
-      { role: 'user', parts: [{ text: `SYSTEM INSTRUCTIONS:\n${SYSTEM}` }] },
-      { role: 'model', parts: [{ text: 'Understood. I will represent Ibrahim accurately and concisely.' }] },
-      ...messages.map((msg: { role: string; content: string }) => ({
-        role: msg.role === 'assistant' ? 'model' : 'user',
-        parts: [{ text: msg.content }],
-      })),
-    ]
+    const contents = messages.map((msg: { role: string; content: string }) => ({
+      role: msg.role === 'assistant' ? 'model' : 'user',
+      parts: [{ text: msg.content }],
+    }))
 
     const apiRes = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${process.env.GEMINI_API_KEY}`,
@@ -52,6 +48,7 @@ export async function POST(req: NextRequest) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          system_instruction: { parts: [{ text: SYSTEM }] },
           contents,
           generationConfig: { maxOutputTokens: 300 },
         }),
@@ -59,21 +56,13 @@ export async function POST(req: NextRequest) {
     )
 
     const data = await apiRes.json()
-    console.log('Gemini status:', apiRes.status, 'raw:', JSON.stringify(data).slice(0, 400))
-
-    // gemini-2.5 may return thinking parts alongside the actual response
     const parts: { text?: string; thought?: boolean }[] =
       data?.candidates?.[0]?.content?.parts ?? []
-    const finishReason = data?.candidates?.[0]?.finishReason ?? 'UNKNOWN'
-    const responseText = parts
+    const text = parts
       .filter(p => !p.thought && p.text)
       .map(p => p.text)
       .join('')
-      .trim()
-
-    console.log(`chat: parts=${parts.length} finish=${finishReason} textLen=${responseText.length}`)
-
-    const text = responseText || FALLBACK
+      .trim() || FALLBACK
 
     return new Response(JSON.stringify({ text }), {
       headers: { 'Content-Type': 'application/json' },
