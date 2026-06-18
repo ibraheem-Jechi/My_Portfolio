@@ -559,10 +559,14 @@ ul  { list-style: none; }
   border-color:rgba(99,102,241,0.3);
   box-shadow:var(--shadow);transform:translateX(4px);
 }
+.tl-role-row {
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px;
+}
+.tl-role-row .tl-role { margin-bottom:0; }
 .tl-badge {
-  position:absolute;top:24px;right:24px;
-  padding:3px 12px;border-radius:100px;
-  font-size:0.7rem;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;
+  padding:2px 10px;border-radius:100px;
+  font-size:0.68rem;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;
+  flex-shrink:0;
 }
 .tl-badge.current {
   background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);color:#86efac;

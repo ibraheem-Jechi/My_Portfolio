@@ -2,7 +2,7 @@ const jobs = [
   {
     role: 'Software Engineer',
     company: 'HAUZ — CreatorHQ',
-    date: 'Apr 2026 – Present',
+    date: 'Feb 2025 – Present',
     location: 'London, UK (Remote)',
     current: true,
     bullets: [
@@ -17,7 +17,7 @@ const jobs = [
     role: 'Full-Stack Web Development Intern',
     company: 'UNRWA & Digital Hub',
     date: 'Jul – Dec 2025',
-    location: 'Remote',
+    location: 'On-site',
     bullets: [
       'Built full-stack projects using MERN stack, Laravel, PHP, and MySQL',
       'Developed RESTful APIs via Express.js, Next.js, and Laravel to streamline backend operations',
@@ -64,10 +64,12 @@ export default function Experience() {
             <div className="tl-item reveal" key={job.role + job.company}>
               <div className="tl-dot"><div className="tl-dot-inner" /></div>
               <div className="tl-card">
-                {job.current && <div className="tl-badge current">Current</div>}
                 <div className="tl-head">
                   <div className="tl-info">
-                    <h3 className="tl-role">{job.role}</h3>
+                    <div className="tl-role-row">
+                      <h3 className="tl-role">{job.role}</h3>
+                      {job.current && <div className="tl-badge current">Current</div>}
+                    </div>
                     <span className="tl-company">{job.company}</span>
                   </div>
                   <div className="tl-meta">
