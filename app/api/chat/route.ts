@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
     const systemTurn = [
       {
         role: 'user',
-        parts: [{ text: `SYSTEM INSTRUCTIONS (follow these for every reply):\n${SYSTEM}` }],
+        parts: [{ text: `SYSTEM INSTRUCTIONS (follow for every reply):\n${SYSTEM}` }],
       },
       {
         role: 'model',
@@ -58,45 +58,23 @@ export async function POST(req: NextRequest) {
       parts: [{ text: msg.content }],
     }))
 
-    const stream = await ai.models.generateContentStream({
+    const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash-lite',
       contents: [...systemTurn, ...userContents],
     })
 
-    const encoder = new TextEncoder()
+    const text =
+      response.candidates?.[0]?.content?.parts?.[0]?.text?.trim() ??
+      "Sorry, I couldn't respond right now. Please email Ibrahim at Ibrahimj02@outlook.com."
 
-    const readable = new ReadableStream({
-      async start(controller) {
-        try {
-          for await (const chunk of stream) {
-            const text = chunk.text
-            if (text) {
-              const data = JSON.stringify({ delta: text })
-              controller.enqueue(encoder.encode(`data: ${data}\n\n`))
-            }
-          }
-        } catch (e) {
-          console.error('Stream error:', e)
-          const err = JSON.stringify({ delta: "Sorry, I couldn't connect right now. Please email Ibrahim at Ibrahimj02@outlook.com." })
-          controller.enqueue(encoder.encode(`data: ${err}\n\n`))
-        }
-        controller.enqueue(encoder.encode('data: [DONE]\n\n'))
-        controller.close()
-      },
-    })
-
-    return new Response(readable, {
-      headers: {
-        'Content-Type': 'text/event-stream',
-        'Cache-Control': 'no-cache',
-        Connection: 'keep-alive',
-      },
+    return new Response(JSON.stringify({ text }), {
+      headers: { 'Content-Type': 'application/json' },
     })
   } catch (e) {
     console.error('Chat API error:', e)
-    return new Response(JSON.stringify({ error: 'AI service unavailable' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    })
+    return new Response(
+      JSON.stringify({ text: "Sorry, I couldn't connect right now. Please email Ibrahim at Ibrahimj02@outlook.com." }),
+      { headers: { 'Content-Type': 'application/json' } }
+    )
   }
 }
