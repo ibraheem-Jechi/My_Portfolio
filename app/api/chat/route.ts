@@ -59,6 +59,7 @@ export async function POST(req: NextRequest) {
     )
 
     const data = await apiRes.json()
+    console.log('Gemini status:', apiRes.status, 'raw:', JSON.stringify(data).slice(0, 400))
 
     // gemini-2.5 may return thinking parts alongside the actual response
     const parts: { text?: string; thought?: boolean }[] =
