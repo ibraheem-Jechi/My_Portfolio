@@ -42,6 +42,9 @@ export async function POST(req: NextRequest) {
       parts: [{ text: msg.content }],
     }))
 
+    const hasKey = !!process.env.GEMINI_API_KEY
+    console.log('key present:', hasKey, 'key len:', process.env.GEMINI_API_KEY?.length ?? 0)
+
     const apiRes = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${process.env.GEMINI_API_KEY}`,
       {
