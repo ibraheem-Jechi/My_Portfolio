@@ -42,18 +42,25 @@ export async function POST(req: NextRequest) {
   try {
     const { messages } = await req.json()
 
-    const contents = messages.map((msg: { role: string; content: string }) => ({
+    const systemTurn = [
+      {
+        role: 'user',
+        parts: [{ text: `SYSTEM INSTRUCTIONS (follow these for every reply):\n${SYSTEM}` }],
+      },
+      {
+        role: 'model',
+        parts: [{ text: 'Understood. I will represent Ibrahim accurately and concisely.' }],
+      },
+    ]
+
+    const userContents = messages.map((msg: { role: string; content: string }) => ({
       role: msg.role === 'assistant' ? 'model' : 'user',
       parts: [{ text: msg.content }],
     }))
 
     const stream = await ai.models.generateContentStream({
       model: 'gemini-2.5-flash-lite',
-      contents,
-      config: {
-        systemInstruction: SYSTEM,
-        maxOutputTokens: 300,
-      },
+      contents: [...systemTurn, ...userContents],
     })
 
     const encoder = new TextEncoder()
