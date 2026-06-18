@@ -1,6 +1,9 @@
+import { GoogleGenAI } from '@google/genai'
 import { NextRequest } from 'next/server'
 
-const SYSTEM = `You are an AI assistant for Ibrahim El Jichi's portfolio. Help recruiters and visitors learn about Ibrahim in a friendly, concise, professional way.
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! })
+
+const CONTEXT = `You are an AI assistant on Ibrahim El Jichi's portfolio website. Answer questions about Ibrahim in a warm, professional tone in 2-4 sentences max.
 
 About Ibrahim:
 - Full-Stack Software Engineer based in Lebanon, open to remote work and relocation
@@ -9,27 +12,17 @@ About Ibrahim:
 - B.Eng. Computer Science & Communication Engineering, Lebanese International University (2020–2024)
 - Languages: Arabic, English, French
 
-Key Skills:
-- Frontend: React, Next.js, TypeScript, HTML/CSS
-- Backend: Node.js, Express, Laravel, PHP
-- Mobile: Flutter, Dart
-- Databases: MongoDB, MySQL
-- DevOps: Docker, Kubernetes, CI/CD
-- AI/APIs: Anthropic Claude API, OpenAI, Gmail API, REST APIs
+Key Skills: React, Next.js, TypeScript, Node.js, Express, Laravel, PHP, Flutter, MongoDB, MySQL, Docker, Kubernetes, CI/CD, Anthropic Claude API, OpenAI, Gmail API
 
 Projects:
-1. CreatorHQ (in progress, private) — AI platform at HAUZ: brand deal tracking, contract handling, revenue monitoring, Gmail integration with intelligent automation workflows.
-2. Supermarket POS System — Full POS with barcode scanning, automated billing, multi-role access, sales analytics, real-time inventory. Stack: MERN.
-3. RentHub — Student housing platform with listings, search & filtering, user auth. Stack: Next.js, React, MongoDB.
-4. Digital Hub Website — Responsive site with admin dashboard and RBAC. Stack: Laravel, PHP, MySQL.
+1. CreatorHQ — AI platform at HAUZ for creator business management (brand deals, contracts, revenue, Gmail automation)
+2. Supermarket POS System — Full POS with barcode scanning, multi-role access, sales analytics (MERN)
+3. RentHub — Student housing platform (Next.js, React, MongoDB)
+4. Digital Hub Website — Admin dashboard with RBAC (Laravel, PHP, MySQL)
 
 Contact: Ibrahimj02@outlook.com | +961 78 860 266 | github.com/ibraheem-Jechi | linkedin.com/in/ibrahim-el-jichi
 
-Rules:
-- Keep every reply to 2–4 sentences. Be warm but professional.
-- If asked about salary or very personal topics, say Ibrahim would be happy to discuss directly by email.
-- Never make up facts not listed above.
-- If someone asks if Ibrahim is available, say yes — he is open to new opportunities.`
+Rules: Never invent facts. If asked about salary, say Ibrahim is happy to discuss by email. If asked about availability, say yes — he is open to new opportunities.`
 
 const FALLBACK = "Sorry, I couldn't respond right now. Please email Ibrahim at Ibrahimj02@outlook.com."
 
@@ -37,35 +30,33 @@ export async function POST(req: NextRequest) {
   try {
     const { messages } = await req.json()
 
-    const contents = messages.map((msg: { role: string; content: string }) => ({
-      role: msg.role === 'assistant' ? 'model' : 'user',
-      parts: [{ text: msg.content }],
-    }))
+    // Build conversation history as readable text so context is preserved
+    const history = messages
+      .slice(0, -1)
+      .map((m: { role: string; content: string }) =>
+        `${m.role === 'user' ? 'Visitor' : 'You'}: ${m.content}`
+      )
+      .join('\n')
 
-    const hasKey = !!process.env.GEMINI_API_KEY
-    console.log('key present:', hasKey, 'key len:', process.env.GEMINI_API_KEY?.length ?? 0)
+    const lastQuestion = messages[messages.length - 1]?.content ?? ''
 
-    const apiRes = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${process.env.GEMINI_API_KEY}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          system_instruction: { parts: [{ text: SYSTEM }] },
-          contents,
-          generationConfig: { maxOutputTokens: 300 },
-        }),
-      }
-    )
+    const prompt = history
+      ? `${CONTEXT}\n\nConversation so far:\n${history}\n\nVisitor: ${lastQuestion}`
+      : `${CONTEXT}\n\nVisitor: ${lastQuestion}`
 
-    const data = await apiRes.json()
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash-lite',
+      contents: [{ role: 'user', parts: [{ text: prompt }] }],
+    })
+
     const parts: { text?: string; thought?: boolean }[] =
-      data?.candidates?.[0]?.content?.parts ?? []
-    const text = parts
-      .filter(p => !p.thought && p.text)
-      .map(p => p.text)
-      .join('')
-      .trim() || FALLBACK
+      response.candidates?.[0]?.content?.parts ?? []
+    const text =
+      parts
+        .filter(p => !p.thought && p.text)
+        .map(p => p.text)
+        .join('')
+        .trim() || FALLBACK
 
     return new Response(JSON.stringify({ text }), {
       headers: { 'Content-Type': 'application/json' },
