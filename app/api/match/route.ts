@@ -4,27 +4,32 @@ import { NextRequest } from 'next/server'
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! })
 
 const IBRAHIM = `
-Ibrahim El Jichi — Full-Stack Software Engineer
+Ibrahim El Jichi — Full-Stack Software Engineer (Backend & API Architecture · AI-Powered Platforms)
 
 Skills:
-- Frontend: React, Next.js, TypeScript, HTML, CSS, Tailwind
-- Backend: Node.js, Express, Laravel, PHP, REST APIs
+- Frontend: React, Next.js, TypeScript, JavaScript (ES6+), HTML5, CSS3, Tailwind CSS, Bootstrap, Context API
+- Backend: Node.js, Express.js, PHP, Laravel, Python, RESTful API Design, JWT, OAuth
+- Databases: MongoDB, MySQL, Schema Design, Query Optimization
+- DevOps: Docker, Kubernetes, CI/CD Pipelines, GitHub Actions, Postman, Swagger
+- Architecture: SOLID Principles, MVC, Repository Pattern, Agile/Scrum, System Design
 - Mobile: Flutter, Dart
-- Databases: MongoDB, MySQL
-- DevOps: Docker, Kubernetes, CI/CD pipelines
-- AI/ML: Anthropic Claude API, OpenAI API, Gmail API, AI workflow automation
+- Tools: Figma, Jira, Trello, ClickUp
 
 Experience:
-- Software Engineer at HAUZ (London, UK — remote): Building CreatorHQ, an AI-powered platform for content creator business management. Features include brand deal tracking, contract handling, revenue monitoring, and Gmail automation with intelligent AI workflows.
+- Software Engineer at HAUZ / CreatorHQ (London, UK — remote, Feb 2026–Present): Architected 88+ production RESTful API endpoints across 10 modules using Node.js, Express.js, TypeScript. Integrated 6 social platforms via Nango (YouTube, Instagram, TikTok, Twitter/X, LinkedIn, Pinterest). Owned Gmail API integration (8 endpoints). Applied SOLID/MVC/Repository patterns. 123 commits across 3 sprint cycles.
+- Full-Stack Web Development Intern, UNRWA & Digital Hub (Jul–Dec 2025): Delivered 5 full-stack projects and 9 dashboards using MERN, Laravel, PHP, MySQL. Deployed 100+ RESTful API endpoints with JWT auth and 4-tier RBAC.
+- Freelance Web Developer (Jun 2023–Present): 3+ client projects using React, Node.js, MySQL.
 
 Projects:
-- CreatorHQ: AI-powered creator business platform (Node.js, MongoDB, REST APIs, Gmail API, AI/ML)
-- Supermarket POS System: Full POS with barcode scanning, multi-role access, sales analytics (MERN stack)
-- RentHub: Student housing platform with listings, search, and user auth (Next.js, React, MongoDB)
+- CreatorHQ: AI-powered creator management platform (Node.js, Express.js, MongoDB, TypeScript, Nango, Gmail API)
+- Supermarket POS System: Full POS with barcode scanning, atomic MongoDB ops, multi-role access (MERN)
+- RentHub: Student housing marketplace with SSR/SEO, Vercel CI/CD (Next.js, React, MongoDB)
+- Blood Bank Donation System: Donor registration, eligibility checker, QR code scanning, email reminders (HTML5, JS, CSS3)
 - Digital Hub Website: Responsive site with admin dashboard and RBAC (Laravel, PHP, MySQL)
 
+Certifications: Full-Stack Development Bootcamp · SeFactory (FCS) · 2025 | CCNA Fundamentals · 2022
 Education: B.Eng. Computer Science & Communication Engineering, Lebanese International University (2020–2024)
-Location: Lebanon — open to remote and relocation
+Location: Beirut, Lebanon — open to remote and relocation
 `
 
 export async function POST(req: NextRequest) {
@@ -74,13 +79,23 @@ Analyze the match and respond with ONLY a valid JSON object — no markdown, no 
     }
 
     return new Response(JSON.stringify(safe), {
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
     })
   } catch (e) {
     console.error('Match API error:', e)
     return new Response(JSON.stringify({ error: 'Analysis failed' }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
     })
   }
+}
+
+export async function OPTIONS() {
+  return new Response(null, {
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    },
+  })
 }

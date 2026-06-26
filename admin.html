@@ -1,0 +1,1863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio Admin — IEJ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --bg: #07071c; --bg-card: #0d0d28; --bg-card-2: #131338;
+      --primary: #22d3ee; --primary-d: #0891b2;
+      --green: #10b981; --red: #ef4444;
+      --text: #e8edf8; --text-muted: #8892b0; --text-dim: #4b5568;
+      --border: rgba(34,211,238,0.12); --border-dim: rgba(255,255,255,0.05);
+      --radius: 12px; --radius-sm: 8px;
+      --font: 'Inter', sans-serif; --font-h: 'Space Grotesk', sans-serif;
+    }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { font-size:16px; -webkit-font-smoothing:antialiased; }
+    body { font-family:var(--font); background:var(--bg); color:var(--text); line-height:1.5; }
+    a { color:inherit; text-decoration:none; }
+    ul { list-style:none; }
+    input, textarea, select { font-family:var(--font); }
+
+    /* ---- LOGIN ---- */
+    #login-screen {
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(34,211,238,0.06) 0%, transparent 70%);
+    }
+    .login-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 48px 44px;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+    .login-logo {
+      font-family: var(--font-h);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .login-logo span { color: var(--primary); }
+    .login-sub {
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      margin-bottom: 36px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    .login-field {
+      position: relative;
+      margin-bottom: 14px;
+    }
+    .login-field input {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border-dim);
+      border-radius: var(--radius-sm);
+      padding: 13px 16px 13px 42px;
+      color: var(--text);
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .login-field input:focus { border-color: var(--primary); }
+    .login-field i {
+      position: absolute;
+      left: 14px; top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      font-size: 0.85rem;
+    }
+    .login-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #22d3ee, #0ea5e9);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 13px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 6px;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .login-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+    .login-err {
+      color: #f87171;
+      font-size: 0.82rem;
+      margin-top: 10px;
+      display: none;
+    }
+    .login-hint {
+      color: var(--text-dim);
+      font-size: 0.75rem;
+      margin-top: 20px;
+    }
+
+    /* ---- APP SHELL ---- */
+    #app { display:none; min-height:100svh; }
+
+    .topbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 60px;
+      background: rgba(7,7,28,0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-dim);
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      gap: 20px;
+      z-index: 100;
+    }
+    .topbar-logo {
+      font-family: var(--font-h);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .topbar-logo span { color: var(--primary); }
+    .topbar-badge {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border-dim);
+      padding: 3px 10px;
+      border-radius: 100px;
+    }
+    .topbar-actions { margin-left: auto; display: flex; gap: 10px; align-items: center; }
+    .topbar-btn {
+      background: none;
+      border: 1px solid var(--border-dim);
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      padding: 7px 14px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+      font-family: var(--font);
+    }
+    .topbar-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .topbar-btn.danger:hover { border-color: var(--red); color: var(--red); }
+    .view-site-btn {
+      background: rgba(34,211,238,0.08);
+      border-color: rgba(34,211,238,0.2);
+      color: var(--primary);
+    }
+    .view-site-btn:hover { background: rgba(34,211,238,0.15); }
+
+    /* ---- SIDEBAR ---- */
+    .sidebar {
+      position: fixed;
+      top: 60px; left: 0; bottom: 0;
+      width: 220px;
+      background: var(--bg-card);
+      border-right: 1px solid var(--border-dim);
+      padding: 24px 12px;
+      overflow-y: auto;
+    }
+    .nav-group-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      padding: 0 10px;
+      margin-bottom: 6px;
+      margin-top: 20px;
+    }
+    .nav-group-label:first-child { margin-top: 0; }
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 10px;
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+      margin-bottom: 2px;
+    }
+    .sidebar-link i { width: 18px; text-align: center; font-size: 0.85rem; }
+    .sidebar-link:hover { background: rgba(255,255,255,0.03); color: var(--text); }
+    .sidebar-link.active {
+      background: rgba(34,211,238,0.08);
+      color: var(--primary);
+      border-left: 2px solid var(--primary);
+      padding-left: 8px;
+    }
+
+    /* ---- MAIN CONTENT ---- */
+    .main {
+      margin-left: 220px;
+      padding-top: 60px;
+      min-height: 100svh;
+    }
+    .page { display: none; padding: 36px 40px; }
+    .page.active { display: block; }
+
+    .page-title {
+      font-family: var(--font-h);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .page-sub {
+      font-size: 0.84rem;
+      color: var(--text-dim);
+      margin-bottom: 36px;
+    }
+
+    /* ---- CARDS / PANELS ---- */
+    .panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-dim);
+      border-radius: var(--radius);
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+    .panel-title {
+      font-family: var(--font-h);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .panel-title i { color: var(--primary); font-size: 0.9rem; }
+
+    /* ---- FORM ELEMENTS ---- */
+    .field-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .field-group.single { grid-template-columns: 1fr; }
+    .field-group.triple { grid-template-columns: 1fr 1fr 1fr; }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .field label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-dim);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .field input,
+    .field textarea,
+    .field select {
+      background: var(--bg);
+      border: 1px solid var(--border-dim);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      color: var(--text);
+      font-size: 0.88rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus { border-color: var(--primary); }
+    .field textarea { resize: vertical; min-height: 80px; }
+    .field select option { background: var(--bg-card); }
+    .field input::placeholder,
+    .field textarea::placeholder { color: var(--text-dim); }
+
+    /* ---- TOGGLE ---- */
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .toggle-label {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+    .toggle-label strong { color: var(--text); font-weight: 600; }
+    .toggle {
+      position: relative;
+      width: 44px; height: 24px;
+      cursor: pointer;
+    }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider {
+      position: absolute;
+      inset: 0;
+      background: var(--bg);
+      border: 1px solid var(--border-dim);
+      border-radius: 100px;
+      transition: 0.25s;
+    }
+    .toggle-slider::before {
+      content: '';
+      position: absolute;
+      height: 16px; width: 16px;
+      left: 3px; bottom: 3px;
+      background: var(--text-dim);
+      border-radius: 50%;
+      transition: 0.25s;
+    }
+    .toggle input:checked + .toggle-slider { background: rgba(16,185,129,0.2); border-color: rgba(16,185,129,0.4); }
+    .toggle input:checked + .toggle-slider::before { transform: translateX(20px); background: var(--green); }
+
+    /* ---- SAVE BUTTON ---- */
+    .save-btn {
+      background: linear-gradient(135deg, #22d3ee, #0ea5e9);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 10px 24px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: opacity 0.2s, transform 0.2s;
+      font-family: var(--font);
+    }
+    .save-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+    .cancel-btn {
+      background: none;
+      border: 1px solid var(--border-dim);
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      padding: 10px 20px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      font-family: var(--font);
+    }
+    .cancel-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .del-btn {
+      background: rgba(239,68,68,0.06);
+      border: 1px solid rgba(239,68,68,0.2);
+      border-radius: var(--radius-sm);
+      color: #f87171;
+      padding: 8px 16px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+      font-family: var(--font);
+    }
+    .del-btn:hover { background: rgba(239,68,68,0.12); }
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    /* ---- ITEM CARDS (list of projects/certs) ---- */
+    .item-list { display: flex; flex-direction: column; gap: 12px; }
+    .item-card {
+      background: var(--bg);
+      border: 1px solid var(--border-dim);
+      border-radius: var(--radius-sm);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: border-color 0.2s;
+    }
+    .item-card:hover { border-color: var(--border); }
+    .item-icon {
+      width: 38px; height: 38px;
+      border-radius: var(--radius-sm);
+      background: rgba(34,211,238,0.08);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+    .item-body { flex: 1; min-width: 0; }
+    .item-name {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--text);
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .item-sub {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+    }
+    .item-actions { display: flex; gap: 8px; flex-shrink: 0; }
+    .icon-btn {
+      width: 32px; height: 32px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border-dim);
+      background: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: all 0.2s;
+    }
+    .icon-btn:hover { border-color: var(--primary); color: var(--primary); background: rgba(34,211,238,0.06); }
+    .icon-btn.danger:hover { border-color: var(--red); color: #f87171; background: rgba(239,68,68,0.06); }
+
+    /* ---- ADD FORM ---- */
+    .add-section {
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border-dim);
+    }
+    .add-section-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ---- STACK TAGS EDITOR ---- */
+    .tags-editor {
+      background: var(--bg);
+      border: 1px solid var(--border-dim);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      align-items: center;
+      min-height: 44px;
+      cursor: text;
+      transition: border-color 0.2s;
+    }
+    .tags-editor:focus-within { border-color: var(--primary); }
+    .tag-pill {
+      background: rgba(34,211,238,0.08);
+      border: 1px solid rgba(34,211,238,0.2);
+      color: #7ee8f8;
+      padding: 3px 10px;
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .tag-pill button {
+      background: none; border: none;
+      color: inherit; cursor: pointer;
+      font-size: 0.7rem; padding: 0;
+      opacity: 0.6;
+      transition: opacity 0.15s;
+    }
+    .tag-pill button:hover { opacity: 1; }
+    .tag-input {
+      background: none;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-size: 0.82rem;
+      font-family: var(--font);
+      min-width: 100px;
+      flex: 1;
+      padding: 2px 0;
+    }
+    .tag-input::placeholder { color: var(--text-dim); }
+
+    /* ---- STATS GRID ---- */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .stat-edit-card {
+      background: var(--bg);
+      border: 1px solid var(--border-dim);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      text-align: center;
+    }
+    .stat-edit-card label {
+      display: block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+    }
+    .stat-edit-card input {
+      width: 100%;
+      background: none;
+      border: none;
+      border-bottom: 1px solid var(--border-dim);
+      color: var(--primary);
+      font-family: var(--font-h);
+      font-size: 1.8rem;
+      font-weight: 700;
+      text-align: center;
+      outline: none;
+      padding-bottom: 4px;
+    }
+    .stat-edit-card input:focus { border-bottom-color: var(--primary); }
+
+    /* ---- TOAST ---- */
+    #admin-toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(60px);
+      background: var(--bg-card);
+      border: 1px solid rgba(16,185,129,0.35);
+      color: #6ee7b7;
+      padding: 10px 24px;
+      border-radius: 100px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 9999;
+      opacity: 0;
+      transition: opacity 0.35s ease, transform 0.35s ease;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      pointer-events: none;
+    }
+    #admin-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    #admin-toast.error { border-color: rgba(239,68,68,0.35); color: #f87171; }
+
+    /* ---- MODAL ---- */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(7,7,28,0.85);
+      backdrop-filter: blur(8px);
+      z-index: 500;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      width: 100%;
+      max-width: 640px;
+      max-height: 90svh;
+      overflow-y: auto;
+    }
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+    .modal-title {
+      font-family: var(--font-h);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .modal-close {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border-dim);
+      background: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .modal-close:hover { border-color: var(--primary); color: var(--primary); }
+  </style>
+</head>
+<body>
+
+<!-- ===== LOGIN ===== -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">IEJ<span>.</span></div>
+    <div class="login-sub">Admin Dashboard</div>
+    <div class="login-field">
+      <i class="fas fa-lock"></i>
+      <input type="password" id="pw-input" placeholder="Enter password" autocomplete="current-password">
+    </div>
+    <button class="login-btn" onclick="doLogin()">
+      <i class="fas fa-arrow-right-to-bracket"></i> Sign In
+    </button>
+    <p class="login-err" id="login-err">Incorrect password. Try again.</p>
+    <p class="login-hint">Default password: <code>iej2026</code></p>
+  </div>
+</div>
+
+<!-- ===== APP ===== -->
+<div id="app">
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="topbar-logo">IEJ<span>.</span></div>
+    <span class="topbar-badge">Admin</span>
+    <div class="topbar-actions">
+      <a href="index.html" target="_blank" class="topbar-btn view-site-btn">
+        <i class="fas fa-eye"></i> View Site
+      </a>
+      <button class="topbar-btn" onclick="exportContent()">
+        <i class="fas fa-download"></i> Export
+      </button>
+      <button class="topbar-btn danger" onclick="doLogout()">
+        <i class="fas fa-right-from-bracket"></i> Logout
+      </button>
+    </div>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="nav-group-label">Overview</div>
+    <div class="sidebar-link active" onclick="showPage('general')">
+      <i class="fas fa-sliders"></i> General
+    </div>
+
+    <div class="nav-group-label">Pages</div>
+    <div class="sidebar-link" onclick="showPage('hero')">
+      <i class="fas fa-wand-magic-sparkles"></i> Hero
+    </div>
+    <div class="sidebar-link" onclick="showPage('about')">
+      <i class="fas fa-user"></i> About Me
+    </div>
+    <div class="sidebar-link" onclick="showPage('experience')">
+      <i class="fas fa-briefcase"></i> Experience
+    </div>
+    <div class="sidebar-link" onclick="showPage('projects')">
+      <i class="fas fa-code-branch"></i> Projects
+    </div>
+    <div class="sidebar-link" onclick="showPage('certificates')">
+      <i class="fas fa-certificate"></i> Certificates
+    </div>
+
+    <div class="nav-group-label">Settings</div>
+    <div class="sidebar-link" onclick="showPage('links')">
+      <i class="fas fa-link"></i> Social & Links
+    </div>
+    <div class="sidebar-link" onclick="showPage('ai')">
+      <i class="fas fa-robot"></i> AI Settings
+    </div>
+    <div class="sidebar-link" onclick="showPage('danger')">
+      <i class="fas fa-triangle-exclamation"></i> Danger Zone
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <div class="main">
+
+    <!-- GENERAL PAGE -->
+    <div class="page active" id="page-general">
+      <div class="page-title">General Settings</div>
+      <div class="page-sub">Availability status and about stats</div>
+
+      <div class="panel">
+        <div class="panel-title"><i class="fas fa-circle-dot"></i> Availability Status</div>
+        <div class="toggle-row">
+          <div class="toggle-label">
+            <strong>Available for opportunities</strong><br>
+            Controls the "Open to Work" badge on the hero section
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="status-toggle" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="field">
+          <label>Badge Text</label>
+          <input type="text" id="status-text" placeholder="Available for new opportunities" value="Available for new opportunities">
+        </div>
+        <div class="btn-row">
+          <button class="save-btn" onclick="saveGeneral()">
+            <i class="fas fa-check"></i> Save Status
+          </button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title"><i class="fas fa-chart-bar"></i> Stats</div>
+        <div class="stats-grid">
+          <div class="stat-edit-card">
+            <label>Yrs Exp</label>
+            <input type="number" id="stat-years" min="0" max="99" value="2">
+          </div>
+          <div class="stat-edit-card">
+            <label>Projects</label>
+            <input type="number" id="stat-projects" min="0" max="999" value="10">
+          </div>
+          <div class="stat-edit-card">
+            <label>Stacks</label>
+            <input type="number" id="stat-stacks" min="0" max="99" value="8">
+          </div>
+          <div class="stat-edit-card">
+            <label>Languages</label>
+            <input type="number" id="stat-langs" min="0" max="99" value="3">
+          </div>
+        </div>
+        <div class="field">
+          <label>Years Label (shown below the number)</label>
+          <input type="text" id="stat-years-label" placeholder="Yrs Experience" value="Yrs Experience">
+        </div>
+        <div class="btn-row">
+          <button class="save-btn" onclick="saveStats()">
+            <i class="fas fa-check"></i> Save Stats
+          </button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title"><i class="fas fa-map-marker-alt"></i> Location</div>
+        <div class="field">
+          <label>Location Text (shown in About + Contact)</label>
+          <input type="text" id="location-text" placeholder="Lebanon · Open to All Opportunities">
+        </div>
+        <div class="btn-row">
+          <button class="save-btn" onclick="saveLocation()">
+            <i class="fas fa-check"></i> Save Location
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJECTS PAGE -->
+    <div class="page" id="page-projects">
+      <div class="page-title">Projects</div>
+      <div class="page-sub">Add, edit, or remove portfolio projects</div>
+
+      <div class="panel">
+        <div class="panel-title"><i class="fas fa-list"></i> All Projects</div>
+        <div class="item-list" id="projects-list"></div>
+
+        <div class="add-section">
+          <div class="add-section-title"><i class="fas fa-plus"></i> Add New Project</div>
+          <div class="field-group">
+            <div class="field">
+              <label>Project Name</label>
+              <input type="text" id="np-name" placeholder="e.g. My Cool App">
+            </div>
+            <div class="field">
+              <label>Visual Theme</label>
+              <select id="np-visual">
+                <option value="vis-ai">AI (dark blue)</option>
+                <option value="vis-teal">Teal (dark teal)</option>
+                <option value="vis-blue">Blue (dark blue)</option>
+                <option value="vis-purple">Purple (dark purple)</option>
+                <option value="vis-red">Red (dark red)</option>
+              </select>
+            </div>
+          </div>
+          <div class="field-group single">
+            <div class="field">
+              <label>Description</label>
+              <textarea id="np-desc" placeholder="Brief description of the project..."></textarea>
+            </div>
+          </div>
+          <div class="field-group">
+            <div class="field">
+              <label>GitHub URL (leave blank if private)</label>
+              <input type="text" id="np-github" placeholder="https://github.com/...">
+            </div>
+            <div class="field">
+              <label>Live Demo URL (optional)</label>
+              <input type="text" id="np-demo" placeholder="https://...">
+            </div>
+          </div>
+          <div class="field-group">
+            <div class="field">
+              <label>Icon (Font Awesome class)</label>
+              <input type="text" id="np-icon" placeholder="fa-globe" value="fa-globe">
+            </div>
+            <div class="field">
+              <label>Badge Text (optional, e.g. "In Progress")</label>
+              <input type="text" id="np-badge" placeholder="Leave blank for none">
+            </div>
+          </div>
+          <div class="field">
+            <label>Tech Stack (press Enter or comma to add tag)</label>
+            <div class="tags-editor" id="np-stack-editor" onclick="focusTagInput('np-stack-input')">
+              <input type="text" class="tag-input" id="np-stack-input" placeholder="Add tech..." data-target="np-stack">
+            </div>
+            <input type="hidden" id="np-stack" value="">
+          </div>
+          <div class="btn-row">
+            <button class="save-btn" onclick="addProject()">
+              <i class="fas fa-plus"></i> Add Project
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CERTIFICATES PAGE -->
+    <div class="page" id="page-certificates">
+      <div class="page-title">Certifications</div>
+      <div class="page-sub">Manage your certification cards</div>
+
+      <div class="panel">
+        <div class="panel-title"><i class="fas fa-list"></i> All Certificates</div>
+        <div class="item-list" id="certs-list"></div>
+
+        <div class="add-section">
+          <div class="add-section-title"><i class="fas fa-plus"></i> Add New Certificate</div>
+          <div class="field-group">
+            <div class="field">
+              <label>Certificate Name</label>
+              <input type="text" id="nc-name" placeholder="e.g. AWS Cloud Practitioner">
+            </div>
+            <div class="field">
+              <label>Issuer / Organization</label>
+              <input type="text" id="nc-issuer" placeholder="e.g. Amazon Web Services">
+            </div>
+          </div>
+          <div class="field-group">
+            <div class="field">
+              <label>Year</label>
+              <input type="text" id="nc-year" placeholder="2025">
+            </div>
+            <div class="field">
+              <label>Icon (Font Awesome class)</label>
+              <input type="text" id="nc-icon" placeholder="fa-cloud" value="fa-certificate">
+            </div>
+          </div>
+          <div class="btn-row">
+            <button class="save-btn" onclick="addCert()">
+              <i class="fas fa-plus"></i> Add Certificate
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LINKS PAGE -->
+    <div class="page" id="page-links">
+      <div class="page-title">Social & Contact Links</div>
+      <div class="page-sub">Update your public-facing links and contact info</div>
+
+      <div class="panel">
+        <div class="panel-title"><i class="fas fa-link"></i> Social Links</div>
+        <div class="field-group single">
+          <div class="field">
+            <label>GitHub URL</label>
+            <input type="text" id="link-github" placeholder="https://github.com/...">
+          </div>
+        </div>
+        <div class="field-group single">
+          <div class="field">
+            <label>LinkedIn URL</label>
+            <input type="text" id="link-linkedin" placeholder="https://linkedin.com/in/...">
+          </div>
+        </div>
+        <div class="field-group single">
+          <div class="field">
+            <label>Email Address</label>
+            <input type="email" id="link-email" placeholder="you@email.com">
+          </div>
+        </div>
+        <div class="field-group single">
+          <div class="field">
+            <label>Phone Number (include country code)</label>
+            <input type="text" id="link-phone" placeholder="+961 78 860 266">
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="save-btn" onclick="saveLinks()">
+            <i class="fas fa-check"></i> Save Links
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- HERO PAGE -->
+    <div class="page" id="page-hero">
+      <div class="page-title">Hero Section</div>
+      <div class="page-sub">Edit the main hero text and the cycling role badge</div>
+
+      <div class="panel">
+        <div class="panel-title"><i class="fas fa-paragraph"></i> Tagline</div>
+        <div class="field-group single">
+          <div class="field">
+            <label>Hero Description (HTML allowed)</label>
+            <textarea id="hero-tagline-input" rows="3" placeholder="Building scalable..."></textarea>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="save-btn" onclick="saveHero()"><i class="fas fa-check"></i> Save Hero</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title"><i class="fas fa-rotate"></i> Cycling Role Titles</div>
+        <p style="font-size:0.84rem;color:var(--text-muted);margin-bottom:16px;">These titles rotate on the hero photo badge. Press Enter or comma to add, × to remove.</p>
+        <div class="field">
+          <label>Roles (Enter/comma to add)</label>
+          <div class="tags-editor" id="hero-roles-editor" onclick="focusTagInput('hero-roles-input')">
+            <input type="text" class="tag-input" id="hero-roles-input" placeholder="Add role..." data-target="hero-roles">
+          </div>
+          <input type="hidden" id="hero-roles" value="">
+        </div>
+        <div class="btn-row" style="margin-top:16px">
+          <button class="save-btn" onclick="saveHeroRoles()"><i class="fas fa-check"></i> Save Roles</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABOUT PAGE -->
+    <div class="page" id="page-about">
+      <div class="page-title">About Me</div>
+      <div class="page-sub">Edit the about section paragraphs and meta info</div>
+
+      <div class="panel">
+        <div class="panel-title"><i class="fas fa-align-left"></i> Paragraphs</div>
+        <div class="field-group single">
+          <div class="field">
+            <label>Paragraph 1 (HTML allowed)</label>
+            <textarea id="about-p1-input" rows="3"></textarea>
+          </div>
+        </div>
+        <div class="field-group single">
+          <div class="field">
+            <label>Paragraph 2 (HTML allowed)</label>
+            <textarea id="about-p2-input" rows="3"></textarea>
+          </div>
+        </div>
+        <div class="field-group single">
+          <div class="field">
+            <label>Paragraph 3 (HTML allowed)</label>
+            <textarea id="about-p3-input" rows="3"></textarea>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="save-btn" onclick="saveAboutText()"><i class="fas fa-check"></i> Save Paragraphs</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title"><i class="fas fa-info-circle"></i> Meta Info</div>
+        <div class="field-group single">
+          <div class="field">
+            <label>Location / Availability</label>
+            <input type="text" id="about-loc-input" placeholder="Lebanon · Open to All Opportunities">
+          </div>
+        </div>
+        <div class="field-group single">
+          <div class="field">
+            <label>Education</label>
+            <input type="text" id="about-edu-input" placeholder="B.Eng. Computer Science...">
+          </div>
+        </div>
+        <div class="field-group single">
+          <div class="field">
+            <label>Languages</label>
+            <input type="text" id="about-lang-input" placeholder="Arabic · English · French">
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="save-btn" onclick="saveAboutMeta()"><i class="fas fa-check"></i> Save Meta</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXPERIENCE PAGE -->
+    <div class="page" id="page-experience">
+      <div class="page-title">Experience</div>
+      <div class="page-sub">Add, edit, or remove work experience entries</div>
+
+      <div class="panel">
+        <div class="panel-title"><i class="fas fa-list"></i> Entries</div>
+        <div id="experience-list"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title"><i class="fas fa-plus"></i> Add Experience</div>
+        <div class="field-group">
+          <div class="field">
+            <label>Job Title / Role</label>
+            <input type="text" id="ne-role" placeholder="Software Engineer">
+          </div>
+          <div class="field">
+            <label>Company</label>
+            <input type="text" id="ne-company" placeholder="HAUZ — CreatorHQ">
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field">
+            <label>Date Range</label>
+            <input type="text" id="ne-date" placeholder="Apr 2026 – Present">
+          </div>
+          <div class="field">
+            <label>Location</label>
+            <input type="text" id="ne-location" placeholder="Remote / On-site / Hybrid">
+          </div>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-label"><strong>Current Position</strong><br>Shows "Current" badge</div>
+          <label class="toggle"><input type="checkbox" id="ne-current"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="field-group single">
+          <div class="field">
+            <label>Bullet Points (one per line)</label>
+            <textarea id="ne-bullets" rows="5" placeholder="Built full-stack projects using MERN stack&#10;Developed RESTful APIs with JWT auth"></textarea>
+          </div>
+        </div>
+        <div class="field">
+          <label>Tags (Enter/comma to add)</label>
+          <div class="tags-editor" id="ne-tags-editor" onclick="focusTagInput('ne-tags-input')">
+            <input type="text" class="tag-input" id="ne-tags-input" placeholder="Add tag..." data-target="ne-tags">
+          </div>
+          <input type="hidden" id="ne-tags" value="">
+        </div>
+        <div class="btn-row" style="margin-top:16px">
+          <button class="save-btn" onclick="addExperience()"><i class="fas fa-plus"></i> Add Entry</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI SETTINGS PAGE -->
+    <div class="page" id="page-ai">
+      <div class="page-title">AI Settings</div>
+      <div class="page-sub">Configure the Gemini API key so the AI chat and job match work on any hosting</div>
+
+      <div class="panel">
+        <div class="panel-title"><i class="fas fa-key"></i> Gemini API Key</div>
+        <p style="font-size:0.84rem;color:var(--text-muted);margin-bottom:16px;">
+          When set, the AI widgets call the Gemini API directly from the browser — no server needed. Get your free key at <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--primary)">aistudio.google.com</a>.
+        </p>
+        <div class="field-group single">
+          <div class="field">
+            <label>API Key</label>
+            <input type="password" id="gemini-key-input" placeholder="AIza...">
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:4px;margin-bottom:16px">
+          <input type="checkbox" id="show-key" onchange="toggleKeyVisibility()">
+          <label for="show-key" style="font-size:0.82rem;color:var(--text-dim);cursor:pointer">Show key</label>
+        </div>
+        <div class="btn-row">
+          <button class="save-btn" onclick="saveGeminiKey()"><i class="fas fa-check"></i> Save Key</button>
+          <button class="cancel-btn" onclick="clearGeminiKey()">Clear Key</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DANGER ZONE PAGE -->
+    <div class="page" id="page-danger">
+      <div class="page-title">Danger Zone</div>
+      <div class="page-sub">Irreversible operations — proceed with care</div>
+
+      <div class="panel" style="border-color:rgba(239,68,68,0.15)">
+        <div class="panel-title" style="color:#f87171"><i class="fas fa-rotate-left" style="color:#f87171"></i> Reset to Defaults</div>
+        <p style="font-size:0.87rem;color:var(--text-muted);margin-bottom:18px;">
+          Wipes all localStorage changes and reverts the portfolio to the built-in default content (projects, certs, stats, links). This cannot be undone.
+        </p>
+        <button class="del-btn" onclick="confirmReset()">
+          <i class="fas fa-trash"></i> Reset All Content
+        </button>
+      </div>
+
+      <div class="panel" style="border-color:rgba(239,68,68,0.15)">
+        <div class="panel-title" style="color:#f87171"><i class="fas fa-key" style="color:#f87171"></i> Change Password</div>
+        <div class="field-group single" style="margin-bottom:0">
+          <div class="field">
+            <label>New Password</label>
+            <input type="password" id="new-pw" placeholder="Enter new password">
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="save-btn" onclick="changePassword()">
+            <i class="fas fa-check"></i> Update Password
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<!-- EDIT PROJECT MODAL -->
+<div class="modal-overlay" id="modal-project">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Edit Project</div>
+      <button class="modal-close" onclick="closeModal('modal-project')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="field-group">
+      <div class="field">
+        <label>Project Name</label>
+        <input type="text" id="ep-name">
+      </div>
+      <div class="field">
+        <label>Visual Theme</label>
+        <select id="ep-visual">
+          <option value="vis-ai">AI (dark blue)</option>
+          <option value="vis-teal">Teal (dark teal)</option>
+          <option value="vis-blue">Blue (dark blue)</option>
+          <option value="vis-purple">Purple (dark purple)</option>
+          <option value="vis-red">Red (dark red)</option>
+        </select>
+      </div>
+    </div>
+    <div class="field-group single">
+      <div class="field">
+        <label>Description</label>
+        <textarea id="ep-desc"></textarea>
+      </div>
+    </div>
+    <div class="field-group">
+      <div class="field">
+        <label>GitHub URL</label>
+        <input type="text" id="ep-github">
+      </div>
+      <div class="field">
+        <label>Live Demo URL</label>
+        <input type="text" id="ep-demo">
+      </div>
+    </div>
+    <div class="field-group">
+      <div class="field">
+        <label>Icon (Font Awesome class)</label>
+        <input type="text" id="ep-icon">
+      </div>
+      <div class="field">
+        <label>Badge Text</label>
+        <input type="text" id="ep-badge">
+      </div>
+    </div>
+    <div class="field">
+      <label>Tech Stack (Enter/comma to add)</label>
+      <div class="tags-editor" id="ep-stack-editor" onclick="focusTagInput('ep-stack-input')">
+        <input type="text" class="tag-input" id="ep-stack-input" placeholder="Add tech..." data-target="ep-stack">
+      </div>
+      <input type="hidden" id="ep-stack" value="">
+    </div>
+    <input type="hidden" id="ep-id">
+    <div class="btn-row">
+      <button class="save-btn" onclick="saveProjectEdit()"><i class="fas fa-check"></i> Save Changes</button>
+      <button class="cancel-btn" onclick="closeModal('modal-project')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT EXPERIENCE MODAL -->
+<div class="modal-overlay" id="modal-experience">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Edit Experience</div>
+      <button class="modal-close" onclick="closeModal('modal-experience')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="field-group">
+      <div class="field">
+        <label>Job Title / Role</label>
+        <input type="text" id="ee-role">
+      </div>
+      <div class="field">
+        <label>Company</label>
+        <input type="text" id="ee-company">
+      </div>
+    </div>
+    <div class="field-group">
+      <div class="field">
+        <label>Date Range</label>
+        <input type="text" id="ee-date">
+      </div>
+      <div class="field">
+        <label>Location</label>
+        <input type="text" id="ee-location">
+      </div>
+    </div>
+    <div class="toggle-row">
+      <div class="toggle-label"><strong>Current Position</strong></div>
+      <label class="toggle"><input type="checkbox" id="ee-current"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="field-group single">
+      <div class="field">
+        <label>Bullet Points (one per line)</label>
+        <textarea id="ee-bullets" rows="5"></textarea>
+      </div>
+    </div>
+    <div class="field">
+      <label>Tags (Enter/comma to add)</label>
+      <div class="tags-editor" id="ee-tags-editor" onclick="focusTagInput('ee-tags-input')">
+        <input type="text" class="tag-input" id="ee-tags-input" placeholder="Add tag..." data-target="ee-tags">
+      </div>
+      <input type="hidden" id="ee-tags" value="">
+    </div>
+    <input type="hidden" id="ee-id">
+    <div class="btn-row">
+      <button class="save-btn" onclick="saveExperienceEdit()"><i class="fas fa-check"></i> Save Changes</button>
+      <button class="cancel-btn" onclick="closeModal('modal-experience')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT CERT MODAL -->
+<div class="modal-overlay" id="modal-cert">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Edit Certificate</div>
+      <button class="modal-close" onclick="closeModal('modal-cert')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="field-group">
+      <div class="field">
+        <label>Certificate Name</label>
+        <input type="text" id="ec-name">
+      </div>
+      <div class="field">
+        <label>Issuer</label>
+        <input type="text" id="ec-issuer">
+      </div>
+    </div>
+    <div class="field-group">
+      <div class="field">
+        <label>Year</label>
+        <input type="text" id="ec-year">
+      </div>
+      <div class="field">
+        <label>Icon (Font Awesome class)</label>
+        <input type="text" id="ec-icon">
+      </div>
+    </div>
+    <input type="hidden" id="ec-id">
+    <div class="btn-row">
+      <button class="save-btn" onclick="saveCertEdit()"><i class="fas fa-check"></i> Save Changes</button>
+      <button class="cancel-btn" onclick="closeModal('modal-cert')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="admin-toast"><i class="fas fa-check-circle"></i> <span id="toast-msg">Saved!</span></div>
+
+<script src="js/store.js"></script>
+<script>
+/* ====================================================
+   ADMIN DASHBOARD LOGIC
+   ==================================================== */
+
+var ADMIN_PW_KEY = 'iej_admin_pw';
+var AUTH_KEY     = 'iej_admin_auth';
+
+/* ---- Auth ---- */
+function getPassword() {
+  return localStorage.getItem(ADMIN_PW_KEY) || 'iej2026';
+}
+
+function doLogin() {
+  var pw = document.getElementById('pw-input').value;
+  if (pw === getPassword()) {
+    sessionStorage.setItem(AUTH_KEY, '1');
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    initAdmin();
+  } else {
+    var err = document.getElementById('login-err');
+    err.style.display = 'block';
+    document.getElementById('pw-input').value = '';
+  }
+}
+
+document.getElementById('pw-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') doLogin();
+});
+
+function doLogout() {
+  sessionStorage.removeItem(AUTH_KEY);
+  location.reload();
+}
+
+/* ---- Init ---- */
+function initAdmin() {
+  var c = PS.get();
+
+  /* General */
+  document.getElementById('status-toggle').checked = c.status.available;
+  document.getElementById('status-text').value = c.status.text;
+  document.getElementById('stat-years').value = c.stats.years;
+  document.getElementById('stat-projects').value = c.stats.projects;
+  document.getElementById('stat-stacks').value = c.stats.stacks;
+  document.getElementById('stat-langs').value = c.stats.languages;
+  document.getElementById('stat-years-label').value = c.stats.yearsLabel;
+  document.getElementById('location-text').value = c.location;
+
+  /* Hero */
+  document.getElementById('hero-tagline-input').value = (c.hero && c.hero.tagline) || '';
+  clearTagEditor('hero-roles-editor', 'hero-roles');
+  if (c.hero && c.hero.roles) {
+    c.hero.roles.forEach(function(r) { addTagToEditor('hero-roles-editor', 'hero-roles', r); });
+  }
+
+  /* About */
+  if (c.about) {
+    document.getElementById('about-p1-input').value  = c.about.p1  || '';
+    document.getElementById('about-p2-input').value  = c.about.p2  || '';
+    document.getElementById('about-p3-input').value  = c.about.p3  || '';
+    document.getElementById('about-loc-input').value  = c.about.location  || '';
+    document.getElementById('about-edu-input').value  = c.about.education || '';
+    document.getElementById('about-lang-input').value = c.about.languages || '';
+  }
+
+  /* Links */
+  document.getElementById('link-github').value = c.github;
+  document.getElementById('link-linkedin').value = c.linkedin;
+  document.getElementById('link-email').value = c.email;
+  document.getElementById('link-phone').value = c.phone;
+
+  /* AI key */
+  var savedKey = localStorage.getItem('iej_gemini_key') || '';
+  document.getElementById('gemini-key-input').value = savedKey;
+
+  renderProjectsList(c.projects);
+  renderCertsList(c.certificates);
+  renderExperienceList(c.experience);
+}
+
+/* Check if already authed (page refresh) */
+if (sessionStorage.getItem(AUTH_KEY) === '1') {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  initAdmin();
+}
+
+/* ---- Page navigation ---- */
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.sidebar-link').forEach(function(l) { l.classList.remove('active'); });
+  document.getElementById('page-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+/* ---- Save helpers ---- */
+function saveGeneral() {
+  var c = PS.get();
+  c.status.available = document.getElementById('status-toggle').checked;
+  c.status.text = document.getElementById('status-text').value.trim() || 'Available for new opportunities';
+  PS.save(c);
+  toast('Status saved!');
+}
+
+function saveStats() {
+  var c = PS.get();
+  c.stats.years      = parseInt(document.getElementById('stat-years').value) || 2;
+  c.stats.projects   = parseInt(document.getElementById('stat-projects').value) || 10;
+  c.stats.stacks     = parseInt(document.getElementById('stat-stacks').value) || 8;
+  c.stats.languages  = parseInt(document.getElementById('stat-langs').value) || 3;
+  c.stats.yearsLabel = document.getElementById('stat-years-label').value.trim() || 'Yrs Experience';
+  PS.save(c);
+  toast('Stats saved!');
+}
+
+function saveLocation() {
+  var c = PS.get();
+  c.location = document.getElementById('location-text').value.trim();
+  PS.save(c);
+  toast('Location saved!');
+}
+
+function saveLinks() {
+  var c = PS.get();
+  c.github   = document.getElementById('link-github').value.trim();
+  c.linkedin = document.getElementById('link-linkedin').value.trim();
+  c.email    = document.getElementById('link-email').value.trim();
+  c.phone    = document.getElementById('link-phone').value.trim();
+  PS.save(c);
+  toast('Links saved!');
+}
+
+/* ---- Projects CRUD ---- */
+function renderProjectsList(projects) {
+  var el = document.getElementById('projects-list');
+  if (!projects.length) {
+    el.innerHTML = '<p style="color:var(--text-dim);font-size:0.85rem">No projects yet.</p>';
+    return;
+  }
+  el.innerHTML = projects.map(function(p, i) {
+    return '<div class="item-card">'
+      + '<div class="item-icon"><i class="fas ' + (p.icon||'fa-globe') + '"></i></div>'
+      + '<div class="item-body">'
+      +   '<div class="item-name">' + p.name + '</div>'
+      +   '<div class="item-sub">' + (p.stack||[]).slice(0,3).join(' · ') + (p.featured?' · Featured':'') + '</div>'
+      + '</div>'
+      + '<div class="item-actions">'
+      +   '<button class="icon-btn" title="Edit" onclick="openEditProject(' + i + ')"><i class="fas fa-pen"></i></button>'
+      +   '<button class="icon-btn danger" title="Delete" onclick="deleteProject(' + i + ')"><i class="fas fa-trash"></i></button>'
+      + '</div>'
+      + '</div>';
+  }).join('');
+}
+
+function addProject() {
+  var name  = document.getElementById('np-name').value.trim();
+  var desc  = document.getElementById('np-desc').value.trim();
+  if (!name || !desc) { toast('Name and description are required.', true); return; }
+
+  var stack  = getTagsFromEditor('np-stack-editor');
+  var github = document.getElementById('np-github').value.trim();
+  var demo   = document.getElementById('np-demo').value.trim();
+  var icon   = document.getElementById('np-icon').value.trim() || 'fa-globe';
+  var badge  = document.getElementById('np-badge').value.trim();
+  var visual = document.getElementById('np-visual').value;
+
+  var c = PS.get();
+  c.projects.push({
+    id: 'proj-' + Date.now(),
+    featured: false,
+    name: name, desc: desc,
+    stack: stack, github: github || null, demo: demo || null,
+    icon: icon, badge: badge || null, badgeType: 'progress',
+    lock: !github, visual: visual
+  });
+  PS.save(c);
+  renderProjectsList(c.projects);
+
+  /* Clear form */
+  ['np-name','np-desc','np-github','np-demo','np-badge'].forEach(function(id) {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('np-icon').value = 'fa-globe';
+  clearTagEditor('np-stack-editor', 'np-stack');
+  toast('Project added!');
+}
+
+function deleteProject(i) {
+  if (!confirm('Delete this project?')) return;
+  var c = PS.get();
+  c.projects.splice(i, 1);
+  PS.save(c);
+  renderProjectsList(c.projects);
+  toast('Project removed.');
+}
+
+function openEditProject(i) {
+  var c = PS.get();
+  var p = c.projects[i];
+  document.getElementById('ep-name').value   = p.name;
+  document.getElementById('ep-desc').value   = p.desc;
+  document.getElementById('ep-github').value = p.github || '';
+  document.getElementById('ep-demo').value   = p.demo || '';
+  document.getElementById('ep-icon').value   = p.icon || 'fa-globe';
+  document.getElementById('ep-badge').value  = p.badge || '';
+  document.getElementById('ep-visual').value = p.visual || 'vis-ai';
+  document.getElementById('ep-id').value     = i;
+  clearTagEditor('ep-stack-editor', 'ep-stack');
+  (p.stack||[]).forEach(function(t) { addTagToEditor('ep-stack-editor', 'ep-stack', t); });
+  openModal('modal-project');
+}
+
+function saveProjectEdit() {
+  var i = parseInt(document.getElementById('ep-id').value);
+  var c = PS.get();
+  var p = c.projects[i];
+  p.name   = document.getElementById('ep-name').value.trim() || p.name;
+  p.desc   = document.getElementById('ep-desc').value.trim() || p.desc;
+  p.github = document.getElementById('ep-github').value.trim() || null;
+  p.demo   = document.getElementById('ep-demo').value.trim() || null;
+  p.icon   = document.getElementById('ep-icon').value.trim() || 'fa-globe';
+  p.badge  = document.getElementById('ep-badge').value.trim() || null;
+  p.visual = document.getElementById('ep-visual').value;
+  p.stack  = getTagsFromEditor('ep-stack-editor');
+  p.lock   = !p.github;
+  PS.save(c);
+  renderProjectsList(c.projects);
+  closeModal('modal-project');
+  toast('Project updated!');
+}
+
+/* ---- Certificates CRUD ---- */
+function renderCertsList(certs) {
+  var el = document.getElementById('certs-list');
+  if (!certs.length) {
+    el.innerHTML = '<p style="color:var(--text-dim);font-size:0.85rem">No certificates yet.</p>';
+    return;
+  }
+  el.innerHTML = certs.map(function(cert, i) {
+    return '<div class="item-card">'
+      + '<div class="item-icon"><i class="fas ' + (cert.icon||'fa-certificate') + '"></i></div>'
+      + '<div class="item-body">'
+      +   '<div class="item-name">' + cert.name + '</div>'
+      +   '<div class="item-sub">' + cert.issuer + ' · ' + cert.year + '</div>'
+      + '</div>'
+      + '<div class="item-actions">'
+      +   '<button class="icon-btn" title="Edit" onclick="openEditCert(' + i + ')"><i class="fas fa-pen"></i></button>'
+      +   '<button class="icon-btn danger" title="Delete" onclick="deleteCert(' + i + ')"><i class="fas fa-trash"></i></button>'
+      + '</div>'
+      + '</div>';
+  }).join('');
+}
+
+function addCert() {
+  var name   = document.getElementById('nc-name').value.trim();
+  var issuer = document.getElementById('nc-issuer').value.trim();
+  var year   = document.getElementById('nc-year').value.trim();
+  var icon   = document.getElementById('nc-icon').value.trim() || 'fa-certificate';
+  if (!name || !issuer) { toast('Name and issuer are required.', true); return; }
+
+  var c = PS.get();
+  c.certificates.push({ id: 'cert-' + Date.now(), name: name, issuer: issuer, year: year, icon: icon });
+  PS.save(c);
+  renderCertsList(c.certificates);
+  ['nc-name','nc-issuer','nc-year'].forEach(function(id) { document.getElementById(id).value = ''; });
+  document.getElementById('nc-icon').value = 'fa-certificate';
+  toast('Certificate added!');
+}
+
+function deleteCert(i) {
+  if (!confirm('Delete this certificate?')) return;
+  var c = PS.get();
+  c.certificates.splice(i, 1);
+  PS.save(c);
+  renderCertsList(c.certificates);
+  toast('Certificate removed.');
+}
+
+function openEditCert(i) {
+  var c = PS.get();
+  var cert = c.certificates[i];
+  document.getElementById('ec-name').value   = cert.name;
+  document.getElementById('ec-issuer').value = cert.issuer;
+  document.getElementById('ec-year').value   = cert.year;
+  document.getElementById('ec-icon').value   = cert.icon || 'fa-certificate';
+  document.getElementById('ec-id').value     = i;
+  openModal('modal-cert');
+}
+
+function saveCertEdit() {
+  var i = parseInt(document.getElementById('ec-id').value);
+  var c = PS.get();
+  var cert = c.certificates[i];
+  cert.name   = document.getElementById('ec-name').value.trim() || cert.name;
+  cert.issuer = document.getElementById('ec-issuer').value.trim() || cert.issuer;
+  cert.year   = document.getElementById('ec-year').value.trim();
+  cert.icon   = document.getElementById('ec-icon').value.trim() || 'fa-certificate';
+  PS.save(c);
+  renderCertsList(c.certificates);
+  closeModal('modal-cert');
+  toast('Certificate updated!');
+}
+
+/* ---- Hero ---- */
+function saveHero() {
+  var c = PS.get();
+  if (!c.hero) c.hero = {};
+  c.hero.tagline = document.getElementById('hero-tagline-input').value.trim();
+  PS.save(c);
+  toast('Hero tagline saved!');
+}
+function saveHeroRoles() {
+  var c = PS.get();
+  if (!c.hero) c.hero = {};
+  c.hero.roles = getTagsFromEditor('hero-roles-editor');
+  if (!c.hero.roles.length) { toast('Add at least one role.', true); return; }
+  PS.save(c);
+  toast('Roles saved!');
+}
+
+/* ---- About ---- */
+function saveAboutText() {
+  var c = PS.get();
+  if (!c.about) c.about = {};
+  c.about.p1 = document.getElementById('about-p1-input').value.trim();
+  c.about.p2 = document.getElementById('about-p2-input').value.trim();
+  c.about.p3 = document.getElementById('about-p3-input').value.trim();
+  PS.save(c);
+  toast('About paragraphs saved!');
+}
+function saveAboutMeta() {
+  var c = PS.get();
+  if (!c.about) c.about = {};
+  c.about.location  = document.getElementById('about-loc-input').value.trim();
+  c.about.education = document.getElementById('about-edu-input').value.trim();
+  c.about.languages = document.getElementById('about-lang-input').value.trim();
+  PS.save(c);
+  toast('About meta saved!');
+}
+
+/* ---- Experience CRUD ---- */
+function renderExperienceList(experience) {
+  var el = document.getElementById('experience-list');
+  if (!el) return;
+  if (!experience || !experience.length) {
+    el.innerHTML = '<p style="color:var(--text-dim);font-size:0.85rem">No experience entries yet.</p>';
+    return;
+  }
+  el.innerHTML = experience.map(function(e, i) {
+    return '<div class="item-card">'
+      + '<div class="item-icon"><i class="fas fa-briefcase"></i></div>'
+      + '<div class="item-body">'
+      +   '<div class="item-name">' + e.role + (e.current ? ' <span style="color:var(--green);font-size:0.72rem;margin-left:6px">● Current</span>' : '') + '</div>'
+      +   '<div class="item-sub">' + e.company + ' · ' + e.date + ' · ' + e.location + '</div>'
+      + '</div>'
+      + '<div class="item-actions">'
+      +   '<button class="icon-btn" title="Edit" onclick="openEditExperience(' + i + ')"><i class="fas fa-pen"></i></button>'
+      +   '<button class="icon-btn danger" title="Delete" onclick="deleteExperience(' + i + ')"><i class="fas fa-trash"></i></button>'
+      + '</div>'
+      + '</div>';
+  }).join('');
+}
+
+function addExperience() {
+  var role    = document.getElementById('ne-role').value.trim();
+  var company = document.getElementById('ne-company').value.trim();
+  if (!role || !company) { toast('Role and company are required.', true); return; }
+
+  var rawBullets = document.getElementById('ne-bullets').value;
+  var bullets = rawBullets.split('\n').map(function(b) { return b.trim(); }).filter(Boolean);
+
+  var c = PS.get();
+  if (!c.experience) c.experience = [];
+  c.experience.push({
+    id: 'exp-' + Date.now(),
+    role:     role,
+    company:  company,
+    date:     document.getElementById('ne-date').value.trim(),
+    location: document.getElementById('ne-location').value.trim(),
+    current:  document.getElementById('ne-current').checked,
+    bullets:  bullets,
+    tags:     getTagsFromEditor('ne-tags-editor')
+  });
+  PS.save(c);
+  renderExperienceList(c.experience);
+  ['ne-role','ne-company','ne-date','ne-location','ne-bullets'].forEach(function(id) {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('ne-current').checked = false;
+  clearTagEditor('ne-tags-editor', 'ne-tags');
+  toast('Experience entry added!');
+}
+
+function deleteExperience(i) {
+  if (!confirm('Delete this experience entry?')) return;
+  var c = PS.get();
+  c.experience.splice(i, 1);
+  PS.save(c);
+  renderExperienceList(c.experience);
+  toast('Entry removed.');
+}
+
+function openEditExperience(i) {
+  var c = PS.get();
+  var e = c.experience[i];
+  document.getElementById('ee-role').value    = e.role;
+  document.getElementById('ee-company').value = e.company;
+  document.getElementById('ee-date').value    = e.date;
+  document.getElementById('ee-location').value = e.location;
+  document.getElementById('ee-current').checked = !!e.current;
+  document.getElementById('ee-bullets').value = (e.bullets || []).join('\n');
+  document.getElementById('ee-id').value = i;
+  clearTagEditor('ee-tags-editor', 'ee-tags');
+  (e.tags || []).forEach(function(t) { addTagToEditor('ee-tags-editor', 'ee-tags', t); });
+  openModal('modal-experience');
+}
+
+function saveExperienceEdit() {
+  var i = parseInt(document.getElementById('ee-id').value);
+  var c = PS.get();
+  var e = c.experience[i];
+  e.role     = document.getElementById('ee-role').value.trim()     || e.role;
+  e.company  = document.getElementById('ee-company').value.trim()  || e.company;
+  e.date     = document.getElementById('ee-date').value.trim();
+  e.location = document.getElementById('ee-location').value.trim();
+  e.current  = document.getElementById('ee-current').checked;
+  var raw    = document.getElementById('ee-bullets').value;
+  e.bullets  = raw.split('\n').map(function(b) { return b.trim(); }).filter(Boolean);
+  e.tags     = getTagsFromEditor('ee-tags-editor');
+  PS.save(c);
+  renderExperienceList(c.experience);
+  closeModal('modal-experience');
+  toast('Experience updated!');
+}
+
+/* ---- AI key ---- */
+function saveGeminiKey() {
+  var key = document.getElementById('gemini-key-input').value.trim();
+  if (!key) { toast('Enter an API key first.', true); return; }
+  localStorage.setItem('iej_gemini_key', key);
+  toast('Gemini API key saved! AI widgets will now work on any server.');
+}
+function clearGeminiKey() {
+  localStorage.removeItem('iej_gemini_key');
+  document.getElementById('gemini-key-input').value = '';
+  toast('API key cleared.');
+}
+function toggleKeyVisibility() {
+  var input = document.getElementById('gemini-key-input');
+  input.type = document.getElementById('show-key').checked ? 'text' : 'password';
+}
+
+/* ---- Danger zone ---- */
+function confirmReset() {
+  if (!confirm('This will delete all your custom content and revert to defaults. Are you sure?')) return;
+  PS.reset();
+  toast('Reset to defaults. Refresh the portfolio to see changes.');
+  initAdmin();
+}
+
+function changePassword() {
+  var pw = document.getElementById('new-pw').value.trim();
+  if (pw.length < 4) { toast('Password must be at least 4 characters.', true); return; }
+  localStorage.setItem(ADMIN_PW_KEY, pw);
+  document.getElementById('new-pw').value = '';
+  toast('Password updated!');
+}
+
+/* ---- Export ---- */
+function exportContent() {
+  var c = PS.get();
+  var blob = new Blob([JSON.stringify(c, null, 2)], { type: 'application/json' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'portfolio-content.json';
+  a.click();
+  toast('Content exported as JSON!');
+}
+
+/* ---- Tags editor ---- */
+function focusTagInput(inputId) {
+  document.getElementById(inputId).focus();
+}
+
+function addTagToEditor(editorId, hiddenId, value) {
+  var editor = document.getElementById(editorId);
+  var pill = document.createElement('div');
+  pill.className = 'tag-pill';
+  pill.setAttribute('data-value', value);
+  pill.innerHTML = value + '<button type="button" onclick="removeTag(this)">×</button>';
+  var input = editor.querySelector('.tag-input');
+  editor.insertBefore(pill, input);
+  updateHiddenTags(editorId, hiddenId);
+}
+
+function removeTag(btn) {
+  var pill = btn.parentElement;
+  var editor = pill.parentElement;
+  var editorId = editor.id;
+  var hiddenId = editorId.replace('-editor', '');
+  pill.remove();
+  updateHiddenTags(editorId, hiddenId);
+}
+
+function updateHiddenTags(editorId, hiddenId) {
+  var editor = document.getElementById(editorId);
+  var pills = editor.querySelectorAll('.tag-pill');
+  var vals = [];
+  pills.forEach(function(p) { vals.push(p.getAttribute('data-value')); });
+  document.getElementById(hiddenId).value = vals.join(',');
+}
+
+function getTagsFromEditor(editorId) {
+  var editor = document.getElementById(editorId);
+  var pills = editor.querySelectorAll('.tag-pill');
+  var vals = [];
+  pills.forEach(function(p) { vals.push(p.getAttribute('data-value')); });
+  return vals;
+}
+
+function clearTagEditor(editorId, hiddenId) {
+  var editor = document.getElementById(editorId);
+  editor.querySelectorAll('.tag-pill').forEach(function(p) { p.remove(); });
+  if (hiddenId) document.getElementById(hiddenId).value = '';
+}
+
+/* Attach keydown to all tag inputs */
+document.querySelectorAll('.tag-input').forEach(function(input) {
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault();
+      var val = this.value.trim().replace(/,$/, '');
+      if (val) {
+        var editorId = this.closest('.tags-editor').id;
+        var hiddenId = editorId.replace('-editor', '');
+        addTagToEditor(editorId, hiddenId, val);
+        this.value = '';
+      }
+    }
+    if (e.key === 'Backspace' && !this.value) {
+      var editor = this.closest('.tags-editor');
+      var pills = editor.querySelectorAll('.tag-pill');
+      if (pills.length) {
+        var editorId = editor.id;
+        var hiddenId = editorId.replace('-editor', '');
+        pills[pills.length - 1].remove();
+        updateHiddenTags(editorId, hiddenId);
+      }
+    }
+  });
+});
+
+/* ---- Modal ---- */
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+document.querySelectorAll('.modal-overlay').forEach(function(overlay) {
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) overlay.classList.remove('open');
+  });
+});
+
+/* ---- Toast ---- */
+var toastTimer;
+function toast(msg, isError) {
+  var el = document.getElementById('admin-toast');
+  var msgEl = document.getElementById('toast-msg');
+  msgEl.textContent = msg;
+  el.className = isError ? 'error show' : 'show';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function() { el.className = ''; }, 2800);
+}
+</script>
+</body>
+</html>

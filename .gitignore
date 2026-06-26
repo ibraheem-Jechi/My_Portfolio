@@ -1,5 +1,9 @@
 .next/
 node_modules/
+public/css
+public/js
+public/index.html
+public/admin.html
 .env
 .env.local
 out/
@@ -8,3 +12,5 @@ out/
 tsconfig.tsbuildinfo
 *.tsbuildinfo
 C*Users*.json
+
+.vercel
