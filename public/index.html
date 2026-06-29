@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ibrahim El Jichi — Full-Stack Developer</title>
+  <meta name="description" content="Full-stack developer building scalable, AI-powered web applications. Currently at HAUZ (London) shipping CreatorHQ.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ===== NAVIGATION ===== -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="#home" class="nav-logo">IEJ<span class="dot">.</span></a>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#education">Education</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <a href="Ibrahim-El-Jichi-Resume.pdf" class="btn btn-nav" download>
+        <i class="fas fa-download"></i> Resume
+      </a>
+      <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero" id="home">
+    <div class="hero-bg">
+      <div class="grid-overlay"></div>
+      <div class="hero-glow hero-glow-1"></div>
+      <div class="hero-glow hero-glow-2"></div>
+    </div>
+    <div class="container">
+      <div class="hero-inner">
+
+        <!-- Left: Text -->
+        <div class="hero-text">
+          <div class="hero-intro">
+            <span class="intro-bar"></span>
+            Welcome to my portfolio
+          </div>
+          <h1 class="hero-name">
+            <span class="name-white">Ibrahim</span>
+            <span class="name-cyan">El Jichi</span>
+          </h1>
+          <p class="hero-role">
+            Full-Stack Developer &nbsp;<span class="role-sep">|</span>&nbsp;
+            <span class="typed-text" id="typewriter"></span>
+          </p>
+          <p class="hero-desc" id="hero-tagline">
+            Building scalable, user-centered web applications and AI-powered products.
+            Currently shipping <strong>CreatorHQ</strong> at HAUZ — London, UK.
+          </p>
+          <div class="hero-cta">
+            <a href="#contact" class="btn btn-primary">
+              <i class="fas fa-paper-plane"></i> Hire Me
+            </a>
+            <a href="Ibrahim-El-Jichi-Resume.pdf" class="btn btn-outline" download>
+              <i class="fas fa-download"></i> Download CV
+            </a>
+          </div>
+          <div class="hero-socials">
+            <a href="https://github.com/ibraheem-Jechi" class="social-icon" data-link="github" title="GitHub" target="_blank" rel="noopener">
+              <i class="fab fa-github"></i>
+            </a>
+            <a href="https://linkedin.com/in/ibrahim-el-jichi" class="social-icon" data-link="linkedin" title="LinkedIn" target="_blank" rel="noopener">
+              <i class="fab fa-linkedin-in"></i>
+            </a>
+            <a href="mailto:Ibrahimj02@outlook.com" class="social-icon" title="Email">
+              <i class="fas fa-envelope"></i>
+            </a>
+            <a href="tel:+96178860266" class="social-icon" title="Phone">
+              <i class="fas fa-phone"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Right: Photo -->
+        <div class="hero-photo-wrap">
+          <div class="photo-ring photo-ring-outer"></div>
+          <div class="photo-ring photo-ring-inner"></div>
+          <div class="photo-circle">
+            <img src="assets/profile.jpg" alt="Ibrahim El Jichi" id="profile-photo">
+            <div class="photo-fallback" id="photo-fallback">IEJ</div>
+          </div>
+          <div class="float-badge float-badge-status" id="hero-badge">
+            <span class="status-dot"></span> Open to Work
+          </div>
+          <div class="float-badge float-badge-role" id="role-badge">
+            <i class="fas fa-code" id="role-badge-icon"></i>
+            <span id="role-badge-text">Full-Stack Developer</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="scroll-hint">
+      <div class="mouse"><div class="wheel"></div></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <!-- ===== ABOUT ===== -->
+  <section class="section about-section" id="about">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-label">Who I Am</span>
+        <h2 class="section-title">About Me</h2>
+        <div class="title-line"></div>
+      </div>
+      <div class="about-layout">
+        <div class="about-text reveal">
+          <p id="about-p1">I'm a <strong>full-stack developer</strong> with a B.Eng. in Computer Science and Communication Engineering from Lebanese International University. I'm passionate about building products that are technically solid and genuinely useful.</p>
+          <p id="about-p2">Currently at <strong>HAUZ</strong> (London), I'm developing <strong>CreatorHQ</strong> — an AI-powered platform for creator business management including brand deal tracking, contracts, and revenue monitoring. I specialize in the <strong>MERN stack</strong>, Next.js, and Laravel.</p>
+          <p id="about-p3">I thrive at the intersection of clean architecture, thoughtful design, and scalable systems. Beyond code, I've mentored students, volunteered in humanitarian initiatives, and worked across fast-paced startup environments.</p>
+          <div class="about-meta">
+            <div class="meta-item">
+              <i class="fas fa-map-marker-alt"></i>
+              <span id="about-location">Lebanon · Open to All Opportunities</span>
+            </div>
+            <div class="meta-item">
+              <i class="fas fa-graduation-cap"></i>
+              <span id="about-education">B.Eng. Computer Science &amp; Comm. Engineering</span>
+            </div>
+            <div class="meta-item">
+              <i class="fas fa-language"></i>
+              <span id="about-languages">Arabic · English · French</span>
+            </div>
+          </div>
+          <div class="about-actions">
+            <a href="Ibrahim-El-Jichi-Resume.pdf" class="btn btn-primary" download>
+              <i class="fas fa-download"></i> Download CV
+            </a>
+            <a href="#contact" class="btn btn-ghost">Let's Talk</a>
+          </div>
+        </div>
+        <div class="stats-row reveal">
+          <div class="stat-card">
+            <span class="stat-num" data-stat="years" data-target="2">0</span><span class="stat-plus">+</span>
+            <span class="stat-lbl">Yrs Experience</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-num" data-stat="projects" data-target="10">0</span><span class="stat-plus">+</span>
+            <span class="stat-lbl">Projects Shipped</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-num" data-stat="stacks" data-target="8">0</span><span class="stat-plus">+</span>
+            <span class="stat-lbl">Tech Stacks</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-num" data-stat="langs" data-target="3">0</span><span class="stat-plus"></span>
+            <span class="stat-lbl">Languages Spoken</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SKILLS ===== -->
+  <section class="section skills-section" id="skills">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-label">What I Know</span>
+        <h2 class="section-title">Skills &amp; Tech Stack</h2>
+        <div class="title-line"></div>
+      </div>
+      <div class="skills-table">
+        <div class="skills-row reveal">
+          <span class="skills-cat">Frontend</span>
+          <div class="skill-tags">
+            <span class="tag tag-hi">React</span>
+            <span class="tag tag-hi">Next.js</span>
+            <span class="tag">JavaScript</span>
+            <span class="tag">TypeScript</span>
+            <span class="tag">HTML5</span>
+            <span class="tag">CSS3</span>
+            <span class="tag">Tailwind CSS</span>
+            <span class="tag">Bootstrap</span>
+          </div>
+        </div>
+        <div class="skills-row reveal">
+          <span class="skills-cat">Backend</span>
+          <div class="skill-tags">
+            <span class="tag tag-hi">Node.js</span>
+            <span class="tag tag-hi">Express.js</span>
+            <span class="tag tag-hi">Laravel</span>
+            <span class="tag">PHP</span>
+            <span class="tag">Python</span>
+            <span class="tag">Java</span>
+            <span class="tag">REST APIs</span>
+          </div>
+        </div>
+        <div class="skills-row reveal">
+          <span class="skills-cat">Database</span>
+          <div class="skill-tags">
+            <span class="tag tag-hi">MongoDB</span>
+            <span class="tag tag-hi">MySQL</span>
+            <span class="tag">Mongoose</span>
+            <span class="tag">PostgreSQL</span>
+          </div>
+        </div>
+        <div class="skills-row reveal">
+          <span class="skills-cat">DevOps</span>
+          <div class="skill-tags">
+            <span class="tag tag-devops">Docker</span>
+            <span class="tag tag-devops">Kubernetes</span>
+            <span class="tag tag-devops">CI/CD</span>
+            <span class="tag">Git / GitHub</span>
+            <span class="tag">Postman</span>
+            <span class="tag">Swagger</span>
+          </div>
+        </div>
+        <div class="skills-row reveal">
+          <span class="skills-cat">Mobile</span>
+          <div class="skill-tags">
+            <span class="tag tag-hi">Flutter</span>
+            <span class="tag">Dart</span>
+          </div>
+        </div>
+        <div class="skills-row reveal">
+          <span class="skills-cat">Tools</span>
+          <div class="skill-tags">
+            <span class="tag">Jira</span>
+            <span class="tag">Trello</span>
+            <span class="tag">ClickUp</span>
+            <span class="tag">Figma</span>
+            <span class="tag">Agile / Scrum</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== EXPERIENCE ===== -->
+  <section class="section experience-section" id="experience">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-label">Where I've Been</span>
+        <h2 class="section-title">Experience</h2>
+        <div class="title-line"></div>
+      </div>
+      <div class="timeline" id="experience-container">
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PROJECTS ===== -->
+  <section class="section projects-section" id="projects">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-label">What I've Built</span>
+        <h2 class="section-title">Projects</h2>
+        <div class="title-line"></div>
+      </div>
+      <div id="projects-container" class="projects-grid"></div>
+    </div>
+  </section>
+
+  <!-- ===== EDUCATION & CERTIFICATES ===== -->
+  <section class="section education-section" id="education">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-label">Background</span>
+        <h2 class="section-title">Education &amp; Certificates</h2>
+        <div class="title-line"></div>
+      </div>
+      <div class="edu-grid">
+
+        <div class="edu-col reveal">
+          <div class="edu-col-header">
+            <div class="edu-col-icon"><i class="fas fa-graduation-cap"></i></div>
+            <h3>Education</h3>
+          </div>
+          <div class="edu-card">
+            <div class="edu-logo-badge">LIU</div>
+            <div class="edu-info">
+              <h4>B.Eng. Computer Science &amp; Communication Engineering</h4>
+              <span class="edu-school">Lebanese International University</span>
+              <div class="edu-details">
+                <span><i class="fas fa-calendar-alt"></i> 2020 – 2024</span>
+                <span><i class="fas fa-map-marker-alt"></i> Beirut, Lebanon</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cert-col reveal">
+          <div class="edu-col-header">
+            <div class="edu-col-icon cert-icon-color"><i class="fas fa-certificate"></i></div>
+            <h3>Certifications</h3>
+          </div>
+          <div id="certs-container"></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CONTACT ===== -->
+  <section class="section contact-section" id="contact">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-label">Get In Touch</span>
+        <h2 class="section-title">Let's Work Together</h2>
+        <div class="title-line"></div>
+        <p class="section-sub">Open to full-time, freelance, and contract opportunities. Let's build something great.</p>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-info reveal">
+          <div class="contact-item">
+            <div class="ci-icon"><i class="fas fa-envelope"></i></div>
+            <div>
+              <span class="ci-label">Email</span>
+              <a href="mailto:Ibrahimj02@outlook.com" class="ci-value">Ibrahimj02@outlook.com</a>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="ci-icon"><i class="fas fa-phone"></i></div>
+            <div>
+              <span class="ci-label">Phone</span>
+              <span class="ci-value">+961 78 860 266</span>
+              <div class="phone-options">
+                <a href="tel:+96178860266" class="phone-opt phone-call">
+                  <i class="fas fa-phone"></i> Call
+                </a>
+                <a href="https://wa.me/96178860266" class="phone-opt phone-wa" target="_blank" rel="noopener">
+                  <i class="fab fa-whatsapp"></i> WhatsApp
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="ci-icon"><i class="fas fa-map-marker-alt"></i></div>
+            <div>
+              <span class="ci-label">Location</span>
+              <span class="ci-value">Lebanon · Open to All Opportunities</span>
+            </div>
+          </div>
+          <div class="contact-socials">
+            <a href="https://github.com/ibraheem-Jechi" class="csocial github" data-link="github" target="_blank" rel="noopener">
+              <i class="fab fa-github"></i> GitHub
+            </a>
+            <a href="https://linkedin.com/in/ibrahim-el-jichi" class="csocial linkedin" data-link="linkedin" target="_blank" rel="noopener">
+              <i class="fab fa-linkedin"></i> LinkedIn
+            </a>
+          </div>
+        </div>
+        <form class="contact-form reveal" id="contact-form" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" id="name" name="name" placeholder="Your name" required>
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" placeholder="your@email.com" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="subject">Subject</label>
+            <input type="text" id="subject" name="subject" placeholder="What's this about?">
+          </div>
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="5" placeholder="Tell me about your project..." required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full">
+            <i class="fas fa-paper-plane"></i> Send Message
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <a href="#home" class="nav-logo">IEJ<span class="dot">.</span></a>
+        <p class="footer-copy">Designed &amp; built by <strong>Ibrahim El Jichi</strong> · 2026 &nbsp;·&nbsp; <a href="admin.html" class="admin-link">&#x2699;</a></p>
+        <nav class="footer-nav">
+          <a href="#about">About</a>
+          <a href="#skills">Skills</a>
+          <a href="#projects">Projects</a>
+          <a href="#education">Education</a>
+          <a href="#contact">Contact</a>
+        </nav>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <i class="fas fa-check-circle"></i>
+    <span id="toast-msg">Message sent!</span>
+  </div>
+
+  <script src="js/store.js"></script>
+  <script src="js/init.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/ai-widgets.js"></script>
+</body>
+</html>
