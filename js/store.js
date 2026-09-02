@@ -18,7 +18,7 @@
 
     about: {
       p1: "I'm a <strong>full-stack developer</strong> with a B.Eng. in Computer Science and Communication Engineering from Lebanese International University. I'm passionate about building products that are technically solid and genuinely useful.",
-      p2: "Currently at <strong>HAUZ</strong> (London), I'm developing <strong>CreatorHQ</strong> — an AI-powered platform for creator business management including brand deal tracking, contracts, and revenue monitoring. I specialize in the <strong>MERN stack</strong>, Next.js, and Laravel.",
+      p2: "Currently at <strong>HAUZ</strong> (London), I own the backend for <strong>CreatorHQ</strong> — a creator/brand marketplace platform handling deals, contracts, invoicing, and revenue tracking. I also work part-time as a <strong>Backend Engineer at Majlisync AI</strong>, building core infrastructure for a multi-agent AI governance pipeline. I specialize in the <strong>MERN stack</strong>, Next.js, and Laravel.",
       p3: "I thrive at the intersection of clean architecture, thoughtful design, and scalable systems. Beyond code, I've mentored students, volunteered in humanitarian initiatives, and worked across fast-paced startup environments.",
       location: 'Lebanon · Open to All Opportunities',
       education: 'B.Eng. Computer Science & Comm. Engineering',
@@ -41,18 +41,36 @@
     experience: [
       {
         id: 'hauz',
-        role: 'Software Engineer',
+        role: 'Software Engineer (Full-Stack)',
         company: 'HAUZ — CreatorHQ',
         location: 'London, UK (Remote)',
-        date: 'Apr 2026 – Present',
+        date: 'Feb 2026 – Present',
         current: true,
         bullets: [
-          'Developing an AI-powered platform for creator business management — brand deal tracking, contract handling, and revenue monitoring',
-          'Building and maintaining core backend systems including data models, APIs, and business logic for scalable product functionality',
-          'Integrating third-party services including Gmail/inbox systems to streamline communication and automation',
-          'Contributing to AI-powered intelligent workflows and automation tools in an agile startup environment'
+          'Own the backend for a creator/brand marketplace platform: deals, contracts, invoicing, and revenue tracking — core operational logic used daily by real creators and brands',
+          'Architected 170+ production REST API endpoints on a 42-table PostgreSQL (Supabase) schema with Row-Level Security and 123 SQL migrations',
+          'Built a multi-provider AI abstraction layer (OpenAI/Groq) powering 9 production AI features, with prompt-injection defense and per-user cost/budget enforcement',
+          'Integrated 6+ third-party services (Stripe billing, Calendly, Gmail, Google/Outlook Calendar) through a unified connector architecture',
+          'Maintained 184 automated tests (Vitest, Playwright e2e), including concurrency/idempotency coverage that closed real billing race-condition bugs before production',
+          'Shipped 14+ features across 3 sprint cycles with zero critical regressions across 123 commits, collaborating within a 5-person engineering team'
         ],
-        tags: ['AI / ML', 'Node.js', 'MongoDB', 'REST APIs', 'GitHub', 'Agile']
+        tags: ['AI / ML', 'PostgreSQL', 'Supabase', 'Node.js', 'Stripe', 'REST APIs']
+      },
+      {
+        id: 'majlisync',
+        role: 'Backend Engineer',
+        company: 'Majlisync AI',
+        location: 'Remote',
+        date: 'Jun 2026 – Present (Part-time)',
+        current: true,
+        bullets: [
+          'Designed core infrastructure for LATTICE Core, a domain-agnostic multi-agent AI decision pipeline for enterprise governance — full output schema and component contracts for U6 (Shared Case Memory & State Store) and U7 (Human Gate & Finalization)',
+          'Resolved cross-unit schema dependencies across a 5-person team, catching field mismatches, type inconsistencies, and missing evidence-traceability links before implementation',
+          'Conducted an independent governance review of the WORM enforcement layer, verifying immutability guarantees, version-locking, and audit trail integrity',
+          'Built the U6 storage layer in Python (database-enforced WORM, SHA-256 content-hash verification, Case State Store, Evidence Registry, Rehydration Service) and the U7 finalization layer',
+          'Conducted structured QA of a Flutter/Firebase mobile app, catching critical bugs including a fabricated-report fallback and a debug keystore shipped on the release build'
+        ],
+        tags: ['Python', 'PostgreSQL', 'Multi-Agent AI', 'System Architecture', 'QA']
       },
       {
         id: 'unrwa',
